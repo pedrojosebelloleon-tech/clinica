@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro Médico | Portal de gestión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blanco:#ffffff;
+    --azul-claro:#eaf4fb;
+    --azul-claro-2:#d3e9f7;
+    --azul:#3f83c9;
+    --azul-oscuro:#2c5f8a;
+    --verde:#4caf7d;
+    --verde-oscuro:#398c63;
+    --texto:#223047;
+    --texto-suave:#5c6b7a;
+    --borde:#d7e6f0;
+    --peligro:#d9534f;
+    --alerta:#e0a94b;
+    --sombra:0 4px 16px rgba(44,95,138,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--texto);
+    background:var(--azul-claro);
+    min-height:100vh;
+  }
+  h1,h2,h3,h4{font-family:'Poppins',sans-serif;margin:0 0 6px;font-weight:600;}
+  p{margin:0 0 10px;color:var(--texto-suave);}
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+
+  /* ---------- ENCABEZADO ---------- */
+  .topbar{
+    background:var(--blanco);
+    border-bottom:1px solid var(--borde);
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .marca{display:flex;align-items:center;gap:10px;}
+  .marca .punto{width:12px;height:12px;border-radius:50%;background:var(--verde);}
+  .marca span{font-family:'Poppins',sans-serif;font-weight:700;font-size:18px;color:var(--azul-oscuro);}
+  .usuario-actual{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--texto-suave);}
+  .btn-salir{
+    background:none;border:1px solid var(--borde);color:var(--texto-suave);
+    padding:7px 14px;border-radius:8px;font-size:13px;
+  }
+  .btn-salir:hover{border-color:var(--peligro);color:var(--peligro);}
+
+  /* ---------- PANTALLA DE SELECCIÓN DE PORTAL ---------- */
+  .portada{
+    max-width:760px;margin:60px auto;padding:0 20px;text-align:center;
+  }
+  .portada .punto-grande{
+    width:54px;height:54px;border-radius:16px;
+    background:linear-gradient(135deg,var(--verde),var(--azul));
+    margin:0 auto 18px;
+  }
+  .portada h1{font-size:30px;color:var(--azul-oscuro);}
+  .portada p.lead{font-size:16px;max-width:480px;margin:0 auto 34px;}
+  .opciones-portal{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
+  .opciones-portal-paciente{gap:14px;margin-bottom:22px;}
+  .btn-hero{
+    background:var(--verde);color:var(--blanco);border:none;
+    padding:14px 28px;border-radius:10px;font-weight:600;font-size:15px;
+  }
+  .btn-hero:hover{background:var(--verde-oscuro);}
+  .btn-hero-secundario{
+    background:var(--blanco);color:var(--azul-oscuro);border:1px solid var(--borde);
+  }
+  .btn-hero-secundario:hover{border-color:var(--azul);color:var(--azul);background:var(--blanco);}
+  .acceso-personal{
+    font-size:13px;color:var(--texto-suave);
+  }
+  .acceso-personal a{color:var(--azul-oscuro);text-decoration:none;font-weight:600;cursor:pointer;border-bottom:1px dashed var(--azul-oscuro);}
+  .acceso-personal a:hover{color:var(--azul);border-color:var(--azul);}
+  .tarjeta-portal{
+    background:var(--blanco);border:1px solid var(--borde);border-radius:14px;
+    padding:26px 24px;width:220px;box-shadow:var(--sombra);text-align:left;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .tarjeta-portal:hover{transform:translateY(-3px);border-color:var(--azul);}
+  .tarjeta-portal h3{color:var(--azul-oscuro);font-size:17px;}
+  .tarjeta-portal p{font-size:13.5px;margin-bottom:16px;}
+  .tarjeta-portal button{
+    width:100%;background:var(--azul);color:var(--blanco);border:none;
+    padding:10px;border-radius:8px;font-weight:600;font-size:14px;
+  }
+  .tarjeta-portal button:hover{background:var(--azul-oscuro);}
+
+  /* ---------- FORMULARIOS DE ACCESO ---------- */
+  .contenedor-auth{max-width:420px;margin:50px auto;padding:0 20px;}
+  .tarjeta-auth{
+    background:var(--blanco);border:1px solid var(--borde);border-radius:14px;
+    padding:32px 28px;box-shadow:var(--sombra);
+  }
+  .tarjeta-auth h2{color:var(--azul-oscuro);font-size:21px;}
+  .volver{
+    background:none;border:none;color:var(--texto-suave);font-size:13px;
+    margin-bottom:16px;padding:0;display:inline-flex;align-items:center;gap:4px;
+  }
+  .volver:hover{color:var(--azul);}
+  .campo{margin-bottom:14px;}
+  .campo label{display:block;font-size:13px;font-weight:500;margin-bottom:5px;color:var(--texto);}
+  .campo input,.campo select,.campo textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--borde);border-radius:8px;
+    font-size:14px;background:var(--azul-claro);color:var(--texto);
+  }
+  .campo input:focus,.campo select:focus,.campo textarea:focus{
+    outline:none;border-color:var(--azul);background:var(--blanco);
+  }
+  .fila-doble{display:flex;gap:12px;}
+  .fila-doble .campo{flex:1;}
+  .btn-primario{
+    width:100%;background:var(--verde);color:var(--blanco);border:none;
+    padding:12px;border-radius:8px;font-weight:600;font-size:14.5px;margin-top:6px;
+  }
+  .btn-primario:hover{background:var(--verde-oscuro);}
+  .btn-primario:disabled{opacity:.6;cursor:default;}
+  .enlace-cambio{text-align:center;font-size:13.5px;margin-top:16px;color:var(--texto-suave);}
+  .enlace-cambio a{color:var(--azul);text-decoration:none;font-weight:600;cursor:pointer;}
+  .mensaje{
+    padding:10px 12px;border-radius:8px;font-size:13.5px;margin-bottom:14px;display:none;
+  }
+  .mensaje.error{background:#fbeaea;color:var(--peligro);display:block;}
+  .mensaje.exito{background:#e8f6ee;color:var(--verde-oscuro);display:block;}
+  .selector-rol{display:flex;gap:8px;margin-bottom:18px;}
+  .selector-rol button{
+    flex:1;padding:9px;border:1px solid var(--borde);background:var(--azul-claro);
+    border-radius:8px;font-size:13px;font-weight:600;color:var(--texto-suave);
+  }
+  .selector-rol button.activo{background:var(--azul);color:var(--blanco);border-color:var(--azul);}
+
+  /* ---------- LAYOUT DE PANELES (APP) ---------- */
+  .app-layout{display:flex;min-height:calc(100vh - 61px);}
+  .barra-lateral{
+    width:210px;background:var(--blanco);border-right:1px solid var(--borde);
+    padding:20px 12px;flex-shrink:0;
+  }
+  .barra-lateral button{
+    width:100%;text-align:left;background:none;border:none;padding:11px 14px;
+    border-radius:8px;font-size:14px;color:var(--texto-suave);margin-bottom:4px;font-weight:500;
+  }
+  .barra-lateral button.activo{background:var(--azul-claro-2);color:var(--azul-oscuro);font-weight:600;}
+  .barra-lateral button:hover{background:var(--azul-claro);}
+  .contenido{flex:1;padding:28px 32px;max-width:980px;}
+  .contenido h2{color:var(--azul-oscuro);font-size:22px;margin-bottom:4px;}
+  .subtitulo{margin-bottom:22px;}
+
+  /* ---------- TARJETAS Y TABLAS ---------- */
+  .panel{
+    background:var(--blanco);border:1px solid var(--borde);border-radius:12px;
+    padding:20px;margin-bottom:20px;
+  }
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{
+    text-align:left;padding:10px 8px;color:var(--texto-suave);
+    border-bottom:1px solid var(--borde);font-weight:600;font-size:12.5px;text-transform:none;
+  }
+  td{padding:11px 8px;border-bottom:1px solid var(--azul-claro-2);}
+  tr:last-child td{border-bottom:none;}
+  .vacio{color:var(--texto-suave);font-size:13.5px;padding:16px 0;text-align:center;}
+  .badge{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
+  .badge.Pendiente{background:#fdf0dc;color:#a8751f;}
+  .badge.Confirmada{background:#e8f6ee;color:var(--verde-oscuro);}
+  .badge.Cancelada{background:#fbeaea;color:var(--peligro);}
+  .badge.Atendida{background:#e6eef8;color:var(--azul-oscuro);}
+  select.mini{
+    padding:5px 8px;border-radius:6px;border:1px solid var(--borde);font-size:12.5px;background:var(--azul-claro);
+  }
+  .btn-chico{
+    background:none;border:1px solid var(--borde);color:var(--texto-suave);
+    padding:5px 10px;border-radius:6px;font-size:12px;margin-right:4px;
+  }
+  .btn-chico:hover{border-color:var(--azul);color:var(--azul);}
+  .btn-chico.peligro:hover{border-color:var(--peligro);color:var(--peligro);}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:800px){
+    .app-layout{flex-direction:column;}
+    .barra-lateral{width:100%;display:flex;overflow-x:auto;padding:10px;}
+    .barra-lateral button{white-space:nowrap;width:auto;}
+    .grid-2{grid-template-columns:1fr;}
+  }
+  .pantalla{display:none;}
+  .pantalla.activa{display:block;}
+</style>
+</head>
+<body>
+
+<!-- ============ ENCABEZADO ============ -->
+<div class="topbar">
+  <div class="marca"><div class="punto"></div><span>Centro Médico</span></div>
+  <div class="usuario-actual" id="cajaUsuario" style="display:none;">
+    <span id="nombreUsuarioActual"></span>
+    <button class="btn-salir" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- ============ PORTADA: ORIENTADA A PACIENTES ============ -->
+<div class="pantalla activa" id="pantalla-portada">
+  <div class="portada">
+    <div class="punto-grande"></div>
+    <h1>Pide tu cita en el centro médico</h1>
+    <p class="lead">Reserva con el especialista que necesitas, consulta el estado de tus citas y gestiona tu cuenta, todo en un mismo lugar.</p>
+    <div class="opciones-portal opciones-portal-paciente">
+      <button class="btn-hero" onclick="mostrar('pantalla-paciente-login')">Iniciar sesión</button>
+      <button class="btn-hero btn-hero-secundario" onclick="mostrar('pantalla-paciente-registro')">Crear una cuenta</button>
+    </div>
+    <div class="acceso-personal">
+      ¿Trabajas en el centro? <a onclick="irLoginPersonal()">Acceso para administración y médicos</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN PACIENTE ============ -->
+<div class="pantalla" id="pantalla-paciente-login">
+  <div class="contenedor-auth">
+    <button class="volver" onclick="mostrar('pantalla-portada')">&larr; Volver</button>
+    <div class="tarjeta-auth">
+      <h2>Acceso de pacientes</h2>
+      <p>Entra con tu correo y contraseña.</p>
+      <div class="mensaje" id="msj-paciente-login"></div>
+      <div class="campo"><label>Correo electrónico</label><input type="email" id="pl-email"></div>
+      <div class="campo"><label>Contraseña</label><input type="password" id="pl-password"></div>
+      <button class="btn-primario" onclick="loginPaciente()">Entrar</button>
+      <div class="enlace-cambio">¿No tienes cuenta? <a onclick="mostrar('pantalla-paciente-registro')">Regístrate</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REGISTRO PACIENTE ============ -->
+<div class="pantalla" id="pantalla-paciente-registro">
+  <div class="contenedor-auth">
+    <button class="volver" onclick="mostrar('pantalla-paciente-login')">&larr; Volver</button>
+    <div class="tarjeta-auth">
+      <h2>Crear cuenta de paciente</h2>
+      <p>Regístrate para poder pedir tus citas.</p>
+      <div class="mensaje" id="msj-paciente-registro"></div>
+      <div class="campo"><label>Nombre completo</label><input type="text" id="pr-nombre"></div>
+      <div class="campo"><label>Correo electrónico</label><input type="email" id="pr-email"></div>
+      <div class="fila-doble">
+        <div class="campo"><label>Teléfono</label><input type="tel" id="pr-telefono"></div>
+        <div class="campo"><label>Fecha de nacimiento</label><input type="date" id="pr-fecha"></div>
+      </div>
+      <div class="campo"><label>Contraseña</label><input type="password" id="pr-password"></div>
+      <button class="btn-primario" onclick="registrarPaciente()">Crear cuenta</button>
+      <div class="enlace-cambio">¿Ya tienes cuenta? <a onclick="mostrar('pantalla-paciente-login')">Inicia sesión</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN PERSONAL (ADMIN / MÉDICO) ============ -->
+<div class="pantalla" id="pantalla-personal-login">
+  <div class="contenedor-auth">
+    <button class="volver" onclick="mostrar('pantalla-portada')">&larr; Volver</button>
+    <div class="tarjeta-auth">
+      <h2>Acceso del personal</h2>
+      <p>Para administrativos y médicos del centro.</p>
+      <div class="mensaje" id="msj-personal-login"></div>
+      <div class="campo"><label>Correo electrónico</label><input type="email" id="stl-email"></div>
+      <div class="campo"><label>Contraseña</label><input type="password" id="stl-password"></div>
+      <button class="btn-primario" onclick="loginPersonal()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP PACIENTE ============ -->
+<div class="pantalla" id="pantalla-app-paciente">
+  <div class="app-layout">
+    <div class="barra-lateral">
+      <button class="activo" data-tab="p-nueva" onclick="tabPaciente('p-nueva',this)">Pedir cita</button>
+      <button data-tab="p-mias" onclick="tabPaciente('p-mias',this)">Mis citas</button>
+    </div>
+    <div class="contenido">
+      <div id="p-nueva">
+        <h2>Solicitar una cita</h2>
+        <p class="subtitulo">Elige un médico, fecha y hora disponible.</p>
+        <div class="panel" style="max-width:480px;">
+          <div class="mensaje" id="msj-nueva-cita"></div>
+          <div class="campo"><label>Médico</label><select id="nc-medico"></select></div>
+          <div class="fila-doble">
+            <div class="campo"><label>Fecha</label><input type="date" id="nc-fecha"></div>
+            <div class="campo"><label>Hora</label><input type="time" id="nc-hora"></div>
+          </div>
+          <div class="campo"><label>Motivo de la consulta</label><textarea id="nc-motivo" rows="3"></textarea></div>
+          <button class="btn-primario" onclick="crearCita()">Solicitar cita</button>
+        </div>
+      </div>
+      <div id="p-mias" style="display:none;">
+        <h2>Mis citas</h2>
+        <p class="subtitulo">Estado de tus citas solicitadas.</p>
+        <div class="panel"><table id="tabla-citas-paciente"><thead><tr><th>Médico</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ADMINISTRACIÓN ============ -->
+<div class="pantalla" id="pantalla-app-admin">
+  <div class="app-layout">
+    <div class="barra-lateral">
+      <button class="activo" data-tab="a-citas" onclick="tabAdmin('a-citas',this)">Citas</button>
+      <button data-tab="a-pacientes" onclick="tabAdmin('a-pacientes',this)">Pacientes</button>
+      <button data-tab="a-personal" onclick="tabAdmin('a-personal',this)">Personal</button>
+    </div>
+    <div class="contenido">
+      <div id="a-citas">
+        <h2>Todas las citas</h2>
+        <p class="subtitulo">Gestiona el estado de las citas del centro.</p>
+        <div class="panel"><table id="tabla-citas-admin"><thead><tr><th>Paciente</th><th>Médico</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div id="a-pacientes" style="display:none;">
+        <h2>Pacientes registrados</h2>
+        <p class="subtitulo">Listado de todas las cuentas de pacientes.</p>
+        <div class="panel"><table id="tabla-pacientes-admin"><thead><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div id="a-personal" style="display:none;">
+        <h2>Personal del centro</h2>
+        <p class="subtitulo">Añade o elimina cuentas de administrativos y médicos.</p>
+        <div class="grid-2">
+          <div class="panel">
+            <h3 style="font-size:15px;">Nuevo usuario</h3>
+            <div class="mensaje" id="msj-nuevo-personal"></div>
+            <div class="campo"><label>Nombre</label><input type="text" id="np-nombre"></div>
+            <div class="campo"><label>Correo</label><input type="email" id="np-email"></div>
+            <div class="campo"><label>Contraseña</label><input type="password" id="np-password"></div>
+            <div class="campo"><label>Rol</label>
+              <select id="np-rol" onchange="document.getElementById('campo-especialidad').style.display = this.value==='medico' ? 'block':'none';">
+                <option value="admin">Administrativo</option>
+                <option value="medico">Médico</option>
+              </select>
+            </div>
+            <div class="campo" id="campo-especialidad"><label>Especialidad</label><input type="text" id="np-especialidad"></div>
+            <button class="btn-primario" onclick="crearPersonal()">Crear usuario</button>
+          </div>
+          <div class="panel">
+            <h3 style="font-size:15px;">Usuarios actuales</h3>
+            <table id="tabla-personal-admin"><thead><tr><th>Nombre</th><th>Rol</th><th></th></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP MÉDICO ============ -->
+<div class="pantalla" id="pantalla-app-medico">
+  <div class="app-layout">
+    <div class="barra-lateral">
+      <button class="activo" data-tab="m-agenda" onclick="tabMedico('m-agenda',this)">Mi agenda</button>
+      <button data-tab="m-pacientes" onclick="tabMedico('m-pacientes',this)">Historiales</button>
+    </div>
+    <div class="contenido">
+      <div id="m-agenda">
+        <h2>Mi agenda</h2>
+        <p class="subtitulo">Citas asignadas a tu consulta.</p>
+        <div class="panel"><table id="tabla-citas-medico"><thead><tr><th>Paciente</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div id="m-pacientes" style="display:none;">
+        <h2>Historiales clínicos</h2>
+        <p class="subtitulo">Elige un paciente de la lista o búscalo por nombre o correo.</p>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="campo"><label>Buscar</label><input type="text" id="bp-termino" oninput="filtrarListadoPacientes()" placeholder="Nombre o correo..."></div>
+            <div id="bp-resultados"></div>
+          </div>
+          <div class="panel" id="panel-historial" style="display:none;">
+            <h3 id="historial-nombre-paciente" style="font-size:16px;"></h3>
+            <table id="tabla-historial"><thead><tr><th>Fecha</th><th>Peso</th><th>Talla</th><th>Presión</th><th>Temp.</th><th>Diagnóstico</th><th>Tratamiento</th><th>Notas</th></tr></thead><tbody></tbody></table>
+            <h4 style="margin-top:18px;font-size:14px;">Añadir nuevo registro</h4>
+            <div class="mensaje" id="msj-historial"></div>
+            <div class="fila-doble">
+              <div class="campo"><label>Peso (kg)</label><input type="number" step="0.1" id="hh-peso"></div>
+              <div class="campo"><label>Talla (cm)</label><input type="number" step="0.1" id="hh-talla"></div>
+            </div>
+            <div class="fila-doble">
+              <div class="campo"><label>Presión arterial</label><input type="text" id="hh-presion" placeholder="ej. 120/80"></div>
+              <div class="campo"><label>Temperatura (°C)</label><input type="number" step="0.1" id="hh-temperatura"></div>
+            </div>
+            <div class="campo"><label>Diagnóstico</label><input type="text" id="hh-diagnostico"></div>
+            <div class="campo"><label>Tratamiento</label><input type="text" id="hh-tratamiento"></div>
+            <div class="campo"><label>Notas</label><textarea id="hh-notas" rows="2"></textarea></div>
+            <button class="btn-primario" onclick="agregarHistorial()">Guardar registro</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   PEGA AQUÍ LA URL DE TU APPS SCRIPT (termina en /exec)
+   Ejemplo: https://script.google.com/macros/s/AKfycb.../exec
+   ===================================================================== */
+const APPS_SCRIPT_URL = "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT";
+
+/* ---------------- ESTADO ---------------- */
+let sesion = JSON.parse(localStorage.getItem('sesion') || 'null');
+let pacienteSeleccionadoHistorial = null;
+
+/* ---------------- LLAMADAS AL BACKEND ---------------- */
+async function llamarAPI(action, datos) {
+  const cuerpo = Object.assign({ action: action }, datos || {});
+  const respuesta = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS
+    body: JSON.stringify(cuerpo)
+  });
+  return respuesta.json();
+}
+
+/* ---------------- NAVEGACIÓN ENTRE PANTALLAS ---------------- */
+function mostrar(id) {
+  document.querySelectorAll('.pantalla').forEach(function (p) { p.classList.remove('activa'); });
+  document.getElementById(id).classList.add('activa');
+}
+function irLoginPersonal() { mostrar('pantalla-personal-login'); }
+
+function mostrarMensaje(id, texto, tipo) {
+  const el = document.getElementById(id);
+  el.textContent = texto;
+  el.className = 'mensaje ' + tipo;
+}
+
+/* ---------------- SESIÓN ---------------- */
+function guardarSesion(s) {
+  sesion = s;
+  localStorage.setItem('sesion', JSON.stringify(s));
+  aplicarSesion();
+}
+function cerrarSesion() {
+  sesion = null;
+  localStorage.removeItem('sesion');
+  document.getElementById('cajaUsuario').style.display = 'none';
+  mostrar('pantalla-portada');
+}
+function aplicarSesion() {
+  if (!sesion) return;
+  document.getElementById('cajaUsuario').style.display = 'flex';
+  document.getElementById('nombreUsuarioActual').textContent = sesion.nombre + ' · ' + sesion.tipoTexto;
+
+  if (sesion.tipo === 'paciente') {
+    mostrar('pantalla-app-paciente');
+    cargarMedicosParaCita();
+    cargarMisCitas();
+  } else if (sesion.tipo === 'admin') {
+    mostrar('pantalla-app-admin');
+    cargarCitasAdmin();
+    cargarPacientesAdmin();
+    cargarPersonalAdmin();
+  } else if (sesion.tipo === 'medico') {
+    mostrar('pantalla-app-medico');
+    cargarCitasMedico();
+  }
+}
+
+/* ---------------- AUTENTICACIÓN: PACIENTES ---------------- */
+async function registrarPaciente() {
+  const datos = {
+    nombre: document.getElementById('pr-nombre').value.trim(),
+    email: document.getElementById('pr-email').value.trim(),
+    telefono: document.getElementById('pr-telefono').value.trim(),
+    fechaNacimiento: document.getElementById('pr-fecha').value,
+    password: document.getElementById('pr-password').value.trim()
+  };
+  if (!datos.nombre || !datos.email || !datos.password) {
+    mostrarMensaje('msj-paciente-registro', 'Completa nombre, correo y contraseña.', 'error'); return;
+  }
+  const res = await llamarAPI('registrarPaciente', datos);
+  if (res.exito) {
+    mostrarMensaje('msj-paciente-registro', 'Cuenta creada. Ya puedes iniciar sesión.', 'exito');
+    setTimeout(function () { mostrar('pantalla-paciente-login'); }, 1200);
+  } else {
+    mostrarMensaje('msj-paciente-registro', res.mensaje, 'error');
+  }
+}
+
+async function loginPaciente() {
+  const datos = { email: document.getElementById('pl-email').value.trim(), password: document.getElementById('pl-password').value.trim() };
+  const res = await llamarAPI('loginPaciente', datos);
+  if (res.exito) {
+    guardarSesion({ tipo: 'paciente', tipoTexto: 'Paciente', id: res.paciente.id, nombre: res.paciente.nombre, email: res.paciente.email });
+  } else {
+    mostrarMensaje('msj-paciente-login', res.mensaje, 'error');
+  }
+}
+
+/* ---------------- AUTENTICACIÓN: PERSONAL ---------------- */
+async function loginPersonal() {
+  const datos = { email: document.getElementById('stl-email').value.trim(), password: document.getElementById('stl-password').value.trim() };
+  const res = await llamarAPI('loginPersonal', datos);
+  if (res.exito) {
+    const rol = res.usuario.rol; // 'admin' o 'medico'
+    guardarSesion({
+      tipo: rol, tipoTexto: rol === 'admin' ? 'Administración' : 'Médico',
+      id: res.usuario.id, nombre: res.usuario.nombre, especialidad: res.usuario.especialidad
+    });
+  } else {
+    mostrarMensaje('msj-personal-login', res.mensaje, 'error');
+  }
+}
+
+/* ---------------- PESTAÑAS INTERNAS ---------------- */
+function cambiarTab(prefijo, tabId, boton) {
+  document.querySelectorAll('#pantalla-app-' + prefijo + ' .barra-lateral button').forEach(function (b) { b.classList.remove('activo'); });
+  boton.classList.add('activo');
+  document.querySelectorAll('#pantalla-app-' + prefijo + ' .contenido > div').forEach(function (d) { d.style.display = 'none'; });
+  document.getElementById(tabId).style.display = 'block';
+}
+function tabPaciente(id, btn) { cambiarTab('paciente', id, btn); }
+function tabAdmin(id, btn) { cambiarTab('admin', id, btn); }
+function tabMedico(id, btn) {
+  cambiarTab('medico', id, btn);
+  if (id === 'm-pacientes') cargarListadoPacientes();
+}
+
+/* ---------------- PORTAL PACIENTE ---------------- */
+async function cargarMedicosParaCita() {
+  const res = await llamarAPI('obtenerMedicos', {});
+  const select = document.getElementById('nc-medico');
+  select.innerHTML = '';
+  if (res.exito) {
+    res.medicos.forEach(function (m) {
+      const op = document.createElement('option');
+      op.value = m.id; op.dataset.nombre = m.nombre;
+      op.textContent = m.nombre + (m.especialidad ? ' — ' + m.especialidad : '');
+      select.appendChild(op);
+    });
+  }
+}
+
+async function crearCita() {
+  const select = document.getElementById('nc-medico');
+  const opcion = select.options[select.selectedIndex];
+  if (!opcion) { mostrarMensaje('msj-nueva-cita', 'No hay médicos disponibles.', 'error'); return; }
+  const datos = {
+    pacienteId: sesion.id, pacienteNombre: sesion.nombre,
+    medicoId: opcion.value, medicoNombre: opcion.dataset.nombre,
+    fecha: document.getElementById('nc-fecha').value,
+    hora: document.getElementById('nc-hora').value,
+    motivo: document.getElementById('nc-motivo').value.trim()
+  };
+  if (!datos.fecha || !datos.hora) { mostrarMensaje('msj-nueva-cita', 'Elige fecha y hora.', 'error'); return; }
+  const res = await llamarAPI('crearCita', datos);
+  mostrarMensaje('msj-nueva-cita', res.mensaje, res.exito ? 'exito' : 'error');
+  if (res.exito) { document.getElementById('nc-fecha').value = ''; document.getElementById('nc-hora').value = ''; document.getElementById('nc-motivo').value = ''; cargarMisCitas(); }
+}
+
+async function cargarMisCitas() {
+  const res = await llamarAPI('obtenerCitasPaciente', { pacienteId: sesion.id });
+  const cuerpo = document.querySelector('#tabla-citas-paciente tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.citas.length === 0) {
+    cuerpo.innerHTML = '<tr><td colspan="6" class="vacio">Todavía no tienes citas.</td></tr>'; return;
+  }
+  res.citas.forEach(function (c) {
+    const fila = document.createElement('tr');
+    fila.innerHTML =
+      '<td>' + c.medicoNombre + '</td><td>' + c.fecha + '</td><td>' + c.hora + '</td><td>' + (c.motivo || '-') + '</td>' +
+      '<td><span class="badge ' + c.estado + '">' + c.estado + '</span></td>' +
+      '<td>' + (c.estado === 'Pendiente' ? '<button class="btn-chico peligro" onclick="cancelarCitaPaciente(\'' + c.id + '\')">Cancelar</button>' : '') + '</td>';
+    cuerpo.appendChild(fila);
+  });
+}
+
+async function cancelarCitaPaciente(id) {
+  await llamarAPI('cancelarCita', { id: id });
+  cargarMisCitas();
+}
+
+/* ---------------- PORTAL ADMINISTRACIÓN ---------------- */
+async function cargarCitasAdmin() {
+  const res = await llamarAPI('obtenerTodasCitas', {});
+  const cuerpo = document.querySelector('#tabla-citas-admin tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.citas.length === 0) { cuerpo.innerHTML = '<tr><td colspan="6" class="vacio">No hay citas registradas.</td></tr>'; return; }
+  res.citas.forEach(function (c) {
+    const fila = document.createElement('tr');
+    fila.innerHTML =
+      '<td>' + c.pacienteNombre + '</td><td>' + c.medicoNombre + '</td><td>' + c.fecha + '</td><td>' + c.hora + '</td><td>' + (c.motivo || '-') + '</td>' +
+      '<td><select class="mini" onchange="cambiarEstadoCita(\'' + c.id + '\', this.value)">' +
+      ['Pendiente', 'Confirmada', 'Atendida', 'Cancelada'].map(function (e) { return '<option value="' + e + '" ' + (e === c.estado ? 'selected' : '') + '>' + e + '</option>'; }).join('') +
+      '</select></td>';
+    cuerpo.appendChild(fila);
+  });
+}
+async function cambiarEstadoCita(id, estado) {
+  await llamarAPI('actualizarEstadoCita', { id: id, estado: estado });
+}
+
+async function cargarPacientesAdmin() {
+  const res = await llamarAPI('obtenerTodosPacientes', {});
+  const cuerpo = document.querySelector('#tabla-pacientes-admin tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.pacientes.length === 0) { cuerpo.innerHTML = '<tr><td colspan="3" class="vacio">Aún no hay pacientes registrados.</td></tr>'; return; }
+  res.pacientes.forEach(function (p) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = '<td>' + p.nombre + '</td><td>' + p.email + '</td><td>' + (p.telefono || '-') + '</td>';
+    cuerpo.appendChild(fila);
+  });
+}
+
+async function cargarPersonalAdmin() {
+  const res = await llamarAPI('obtenerTodoPersonal', {});
+  const cuerpo = document.querySelector('#tabla-personal-admin tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.personal.length === 0) { cuerpo.innerHTML = '<tr><td colspan="3" class="vacio">No hay usuarios.</td></tr>'; return; }
+  res.personal.forEach(function (p) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = '<td>' + p.nombre + '</td><td>' + (p.rol === 'admin' ? 'Administrativo' : 'Médico') + '</td>' +
+      '<td><button class="btn-chico peligro" onclick="eliminarPersonal(\'' + p.id + '\')">Eliminar</button></td>';
+    cuerpo.appendChild(fila);
+  });
+}
+
+async function crearPersonal() {
+  const datos = {
+    nombre: document.getElementById('np-nombre').value.trim(),
+    email: document.getElementById('np-email').value.trim(),
+    password: document.getElementById('np-password').value,
+    rol: document.getElementById('np-rol').value,
+    especialidad: document.getElementById('np-especialidad').value.trim()
+  };
+  if (!datos.nombre || !datos.email || !datos.password) { mostrarMensaje('msj-nuevo-personal', 'Completa todos los campos obligatorios.', 'error'); return; }
+  const res = await llamarAPI('crearPersonal', datos);
+  mostrarMensaje('msj-nuevo-personal', res.mensaje, res.exito ? 'exito' : 'error');
+  if (res.exito) {
+    document.getElementById('np-nombre').value = ''; document.getElementById('np-email').value = ''; document.getElementById('np-password').value = '';
+    cargarPersonalAdmin();
+  }
+}
+async function eliminarPersonal(id) {
+  if (!confirm('¿Eliminar este usuario?')) return;
+  await llamarAPI('eliminarPersonal', { id: id });
+  cargarPersonalAdmin();
+}
+
+/* ---------------- PORTAL MÉDICO ---------------- */
+async function cargarCitasMedico() {
+  const res = await llamarAPI('obtenerCitasMedico', { medicoId: sesion.id });
+  const cuerpo = document.querySelector('#tabla-citas-medico tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.citas.length === 0) { cuerpo.innerHTML = '<tr><td colspan="5" class="vacio">No tienes citas asignadas.</td></tr>'; return; }
+  res.citas.forEach(function (c) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = '<td>' + c.pacienteNombre + '</td><td>' + c.fecha + '</td><td>' + c.hora + '</td><td>' + (c.motivo || '-') + '</td>' +
+      '<td><span class="badge ' + c.estado + '">' + c.estado + '</span></td>';
+    cuerpo.appendChild(fila);
+  });
+}
+
+let temporizadorBusqueda = null;
+let listadoPacientesMedico = [];
+
+async function cargarListadoPacientes() {
+  const res = await llamarAPI('obtenerTodosPacientes', {});
+  listadoPacientesMedico = res.exito ? res.pacientes : [];
+  pintarListadoPacientes(listadoPacientesMedico);
+}
+
+function filtrarListadoPacientes() {
+  const termino = document.getElementById('bp-termino').value.trim().toLowerCase();
+  if (!termino) { pintarListadoPacientes(listadoPacientesMedico); return; }
+  const filtrados = listadoPacientesMedico.filter(function (p) {
+    return p.nombre.toLowerCase().indexOf(termino) !== -1 || p.email.toLowerCase().indexOf(termino) !== -1;
+  });
+  pintarListadoPacientes(filtrados);
+}
+
+function pintarListadoPacientes(lista) {
+  const contenedor = document.getElementById('bp-resultados');
+  contenedor.innerHTML = '';
+  if (lista.length === 0) { contenedor.innerHTML = '<p class="vacio">No hay pacientes que mostrar.</p>'; return; }
+  lista.forEach(function (p) {
+    const fila = document.createElement('div');
+    fila.style.cssText = 'padding:10px 12px;border:1px solid var(--borde);border-radius:8px;margin-top:8px;cursor:pointer;font-size:13.5px;';
+    fila.innerHTML = '<strong>' + p.nombre + '</strong><br><span style="color:var(--texto-suave);font-size:12.5px;">' + p.email + '</span>';
+    fila.onclick = function () { abrirHistorial(p); };
+    contenedor.appendChild(fila);
+  });
+}
+
+async function abrirHistorial(paciente) {
+  pacienteSeleccionadoHistorial = paciente;
+  document.getElementById('panel-historial').style.display = 'block';
+  document.getElementById('historial-nombre-paciente').textContent = 'Historial de ' + paciente.nombre;
+  await cargarHistorial();
+}
+
+async function cargarHistorial() {
+  const res = await llamarAPI('obtenerHistorial', { pacienteId: pacienteSeleccionadoHistorial.id });
+  const cuerpo = document.querySelector('#tabla-historial tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.historial.length === 0) { cuerpo.innerHTML = '<tr><td colspan="8" class="vacio">Sin registros previos.</td></tr>'; return; }
+  res.historial.forEach(function (h) {
+    const fila = document.createElement('tr');
+    fila.innerHTML =
+      '<td>' + h.fecha + '</td><td>' + (h.peso || '-') + '</td><td>' + (h.talla || '-') + '</td>' +
+      '<td>' + (h.presionArterial || '-') + '</td><td>' + (h.temperatura || '-') + '</td>' +
+      '<td>' + h.diagnostico + '</td><td>' + (h.tratamiento || '-') + '</td><td>' + (h.notas || '-') + '</td>';
+    cuerpo.appendChild(fila);
+  });
+}
+
+async function agregarHistorial() {
+  const datos = {
+    pacienteId: pacienteSeleccionadoHistorial.id,
+    medicoId: sesion.id, medicoNombre: sesion.nombre,
+    peso: document.getElementById('hh-peso').value.trim(),
+    talla: document.getElementById('hh-talla').value.trim(),
+    presionArterial: document.getElementById('hh-presion').value.trim(),
+    temperatura: document.getElementById('hh-temperatura').value.trim(),
+    diagnostico: document.getElementById('hh-diagnostico').value.trim(),
+    tratamiento: document.getElementById('hh-tratamiento').value.trim(),
+    notas: document.getElementById('hh-notas').value.trim()
+  };
+  if (!datos.diagnostico) { mostrarMensaje('msj-historial', 'El diagnóstico es obligatorio.', 'error'); return; }
+  const res = await llamarAPI('agregarHistorial', datos);
+  mostrarMensaje('msj-historial', res.mensaje, res.exito ? 'exito' : 'error');
+  if (res.exito) {
+    ['hh-peso', 'hh-talla', 'hh-presion', 'hh-temperatura', 'hh-diagnostico', 'hh-tratamiento', 'hh-notas'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
+    cargarHistorial();
+  }
+}
+
+/* ---------------- INICIO ---------------- */
+if (sesion) aplicarSesion();
+</script>
+</body>
+</html>
