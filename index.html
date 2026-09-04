@@ -365,20 +365,30 @@
       </div>
       <div id="m-pacientes" style="display:none;">
         <h2>Historiales clínicos</h2>
-        <p class="subtitulo">Busca un paciente para ver o añadir un registro.</p>
-        <div class="panel" style="max-width:420px;">
-          <div class="campo"><label>Buscar paciente por nombre o correo</label><input type="text" id="bp-termino" oninput="buscarPacientes()"></div>
-          <div id="bp-resultados"></div>
-        </div>
-        <div class="panel" id="panel-historial" style="display:none;">
-          <h3 id="historial-nombre-paciente" style="font-size:16px;"></h3>
-          <table id="tabla-historial"><thead><tr><th>Fecha</th><th>Médico</th><th>Diagnóstico</th><th>Tratamiento</th><th>Notas</th></tr></thead><tbody></tbody></table>
-          <h4 style="margin-top:18px;font-size:14px;">Añadir nuevo registro</h4>
-          <div class="mensaje" id="msj-historial"></div>
-          <div class="campo"><label>Diagnóstico</label><input type="text" id="hh-diagnostico"></div>
-          <div class="campo"><label>Tratamiento</label><input type="text" id="hh-tratamiento"></div>
-          <div class="campo"><label>Notas</label><textarea id="hh-notas" rows="2"></textarea></div>
-          <button class="btn-primario" onclick="agregarHistorial()">Guardar registro</button>
+        <p class="subtitulo">Elige un paciente de la lista o búscalo por nombre o correo.</p>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="campo"><label>Buscar</label><input type="text" id="bp-termino" oninput="filtrarListadoPacientes()" placeholder="Nombre o correo..."></div>
+            <div id="bp-resultados"></div>
+          </div>
+          <div class="panel" id="panel-historial" style="display:none;">
+            <h3 id="historial-nombre-paciente" style="font-size:16px;"></h3>
+            <table id="tabla-historial"><thead><tr><th>Fecha</th><th>Peso</th><th>Talla</th><th>Presión</th><th>Temp.</th><th>Diagnóstico</th><th>Tratamiento</th><th>Notas</th></tr></thead><tbody></tbody></table>
+            <h4 style="margin-top:18px;font-size:14px;">Añadir nuevo registro</h4>
+            <div class="mensaje" id="msj-historial"></div>
+            <div class="fila-doble">
+              <div class="campo"><label>Peso (kg)</label><input type="number" step="0.1" id="hh-peso"></div>
+              <div class="campo"><label>Talla (cm)</label><input type="number" step="0.1" id="hh-talla"></div>
+            </div>
+            <div class="fila-doble">
+              <div class="campo"><label>Presión arterial</label><input type="text" id="hh-presion" placeholder="ej. 120/80"></div>
+              <div class="campo"><label>Temperatura (°C)</label><input type="number" step="0.1" id="hh-temperatura"></div>
+            </div>
+            <div class="campo"><label>Diagnóstico</label><input type="text" id="hh-diagnostico"></div>
+            <div class="campo"><label>Tratamiento</label><input type="text" id="hh-tratamiento"></div>
+            <div class="campo"><label>Notas</label><textarea id="hh-notas" rows="2"></textarea></div>
+            <button class="btn-primario" onclick="agregarHistorial()">Guardar registro</button>
+          </div>
         </div>
       </div>
     </div>
@@ -390,7 +400,7 @@
    PEGA AQUÍ LA URL DE TU APPS SCRIPT (termina en /exec)
    Ejemplo: https://script.google.com/macros/s/AKfycb.../exec
    ===================================================================== */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTF6L6fqr6fjR2vFigsxHkIlJ8SkcuyPvNoanCUQYxMRUHr2P9WazqQqJ4PefFIBZd/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNCIsUN7IegX9xp5yNL9aJNTpt0uUeyYTa7-vABWzyXsYPPwRCUuYxVTLSZg5H40ot/exec";
 
 /* ---------------- ESTADO ---------------- */
 let sesion = JSON.parse(localStorage.getItem('sesion') || 'null');
@@ -459,7 +469,7 @@ async function registrarPaciente() {
     email: document.getElementById('pr-email').value.trim(),
     telefono: document.getElementById('pr-telefono').value.trim(),
     fechaNacimiento: document.getElementById('pr-fecha').value,
-    password: document.getElementById('pr-password').value
+    password: document.getElementById('pr-password').value.trim()
   };
   if (!datos.nombre || !datos.email || !datos.password) {
     mostrarMensaje('msj-paciente-registro', 'Completa nombre, correo y contraseña.', 'error'); return;
@@ -474,7 +484,7 @@ async function registrarPaciente() {
 }
 
 async function loginPaciente() {
-  const datos = { email: document.getElementById('pl-email').value.trim(), password: document.getElementById('pl-password').value };
+  const datos = { email: document.getElementById('pl-email').value.trim(), password: document.getElementById('pl-password').value.trim() };
   const res = await llamarAPI('loginPaciente', datos);
   if (res.exito) {
     guardarSesion({ tipo: 'paciente', tipoTexto: 'Paciente', id: res.paciente.id, nombre: res.paciente.nombre, email: res.paciente.email });
@@ -485,7 +495,7 @@ async function loginPaciente() {
 
 /* ---------------- AUTENTICACIÓN: PERSONAL ---------------- */
 async function loginPersonal() {
-  const datos = { email: document.getElementById('stl-email').value.trim(), password: document.getElementById('stl-password').value };
+  const datos = { email: document.getElementById('stl-email').value.trim(), password: document.getElementById('stl-password').value.trim() };
   const res = await llamarAPI('loginPersonal', datos);
   if (res.exito) {
     const rol = res.usuario.rol; // 'admin' o 'medico'
@@ -507,7 +517,10 @@ function cambiarTab(prefijo, tabId, boton) {
 }
 function tabPaciente(id, btn) { cambiarTab('paciente', id, btn); }
 function tabAdmin(id, btn) { cambiarTab('admin', id, btn); }
-function tabMedico(id, btn) { cambiarTab('medico', id, btn); }
+function tabMedico(id, btn) {
+  cambiarTab('medico', id, btn);
+  if (id === 'm-pacientes') cargarListadoPacientes();
+}
 
 /* ---------------- PORTAL PACIENTE ---------------- */
 async function cargarMedicosParaCita() {
@@ -645,26 +658,34 @@ async function cargarCitasMedico() {
 }
 
 let temporizadorBusqueda = null;
-function buscarPacientes() {
-  clearTimeout(temporizadorBusqueda);
-  temporizadorBusqueda = setTimeout(async function () {
-    const termino = document.getElementById('bp-termino').value.trim();
-    const contenedor = document.getElementById('bp-resultados');
-    if (!termino) { contenedor.innerHTML = ''; return; }
-    const res = await llamarAPI('buscarPacientes', { termino: termino });
-    contenedor.innerHTML = '';
-    if (res.exito && res.pacientes.length > 0) {
-      res.pacientes.forEach(function (p) {
-        const fila = document.createElement('div');
-        fila.style.cssText = 'padding:9px 10px;border:1px solid var(--borde);border-radius:8px;margin-top:6px;cursor:pointer;font-size:13.5px;';
-        fila.innerHTML = '<strong>' + p.nombre + '</strong><br><span style="color:var(--texto-suave);font-size:12.5px;">' + p.email + '</span>';
-        fila.onclick = function () { abrirHistorial(p); };
-        contenedor.appendChild(fila);
-      });
-    } else {
-      contenedor.innerHTML = '<p style="font-size:13px;">Sin resultados.</p>';
-    }
-  }, 350);
+let listadoPacientesMedico = [];
+
+async function cargarListadoPacientes() {
+  const res = await llamarAPI('obtenerTodosPacientes', {});
+  listadoPacientesMedico = res.exito ? res.pacientes : [];
+  pintarListadoPacientes(listadoPacientesMedico);
+}
+
+function filtrarListadoPacientes() {
+  const termino = document.getElementById('bp-termino').value.trim().toLowerCase();
+  if (!termino) { pintarListadoPacientes(listadoPacientesMedico); return; }
+  const filtrados = listadoPacientesMedico.filter(function (p) {
+    return p.nombre.toLowerCase().indexOf(termino) !== -1 || p.email.toLowerCase().indexOf(termino) !== -1;
+  });
+  pintarListadoPacientes(filtrados);
+}
+
+function pintarListadoPacientes(lista) {
+  const contenedor = document.getElementById('bp-resultados');
+  contenedor.innerHTML = '';
+  if (lista.length === 0) { contenedor.innerHTML = '<p class="vacio">No hay pacientes que mostrar.</p>'; return; }
+  lista.forEach(function (p) {
+    const fila = document.createElement('div');
+    fila.style.cssText = 'padding:10px 12px;border:1px solid var(--borde);border-radius:8px;margin-top:8px;cursor:pointer;font-size:13.5px;';
+    fila.innerHTML = '<strong>' + p.nombre + '</strong><br><span style="color:var(--texto-suave);font-size:12.5px;">' + p.email + '</span>';
+    fila.onclick = function () { abrirHistorial(p); };
+    contenedor.appendChild(fila);
+  });
 }
 
 async function abrirHistorial(paciente) {
@@ -678,10 +699,13 @@ async function cargarHistorial() {
   const res = await llamarAPI('obtenerHistorial', { pacienteId: pacienteSeleccionadoHistorial.id });
   const cuerpo = document.querySelector('#tabla-historial tbody');
   cuerpo.innerHTML = '';
-  if (!res.exito || res.historial.length === 0) { cuerpo.innerHTML = '<tr><td colspan="5" class="vacio">Sin registros previos.</td></tr>'; return; }
+  if (!res.exito || res.historial.length === 0) { cuerpo.innerHTML = '<tr><td colspan="8" class="vacio">Sin registros previos.</td></tr>'; return; }
   res.historial.forEach(function (h) {
     const fila = document.createElement('tr');
-    fila.innerHTML = '<td>' + h.fecha + '</td><td>' + h.medicoNombre + '</td><td>' + h.diagnostico + '</td><td>' + h.tratamiento + '</td><td>' + (h.notas || '-') + '</td>';
+    fila.innerHTML =
+      '<td>' + h.fecha + '</td><td>' + (h.peso || '-') + '</td><td>' + (h.talla || '-') + '</td>' +
+      '<td>' + (h.presionArterial || '-') + '</td><td>' + (h.temperatura || '-') + '</td>' +
+      '<td>' + h.diagnostico + '</td><td>' + (h.tratamiento || '-') + '</td><td>' + (h.notas || '-') + '</td>';
     cuerpo.appendChild(fila);
   });
 }
@@ -690,6 +714,10 @@ async function agregarHistorial() {
   const datos = {
     pacienteId: pacienteSeleccionadoHistorial.id,
     medicoId: sesion.id, medicoNombre: sesion.nombre,
+    peso: document.getElementById('hh-peso').value.trim(),
+    talla: document.getElementById('hh-talla').value.trim(),
+    presionArterial: document.getElementById('hh-presion').value.trim(),
+    temperatura: document.getElementById('hh-temperatura').value.trim(),
     diagnostico: document.getElementById('hh-diagnostico').value.trim(),
     tratamiento: document.getElementById('hh-tratamiento').value.trim(),
     notas: document.getElementById('hh-notas').value.trim()
@@ -698,7 +726,9 @@ async function agregarHistorial() {
   const res = await llamarAPI('agregarHistorial', datos);
   mostrarMensaje('msj-historial', res.mensaje, res.exito ? 'exito' : 'error');
   if (res.exito) {
-    document.getElementById('hh-diagnostico').value = ''; document.getElementById('hh-tratamiento').value = ''; document.getElementById('hh-notas').value = '';
+    ['hh-peso', 'hh-talla', 'hh-presion', 'hh-temperatura', 'hh-diagnostico', 'hh-tratamiento', 'hh-notas'].forEach(function (id) {
+      document.getElementById(id).value = '';
+    });
     cargarHistorial();
   }
 }
