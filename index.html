@@ -251,8 +251,8 @@
         <!-- VISTA: AUTENTICACIÓN -->
         <section id="view-auth" class="card" style="max-width: 450px; margin: 2rem auto;">
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchAuthTab('login')">Iniciar Sesión</button>
-                <button class="tab-btn" onclick="switchAuthTab('register')">Registrarse (Pacientes)</button>
+                <button class="tab-btn active" onclick="switchAuthTab(event, 'login')">Iniciar Sesión</button>
+                <button class="tab-btn" onclick="switchAuthTab(event, 'register')">Registrarse (Pacientes)</button>
             </div>
 
             <!-- Formulario Login -->
@@ -272,23 +272,23 @@
             <form id="form-register" class="hidden" onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" id="reg-nombre" required>
+                    <input type="text" id="reg-nombre" required placeholder="Juan Pérez">
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" id="reg-email" required>
+                    <input type="email" id="reg-email" required placeholder="juan@ejemplo.com">
                 </div>
                 <div class="form-group">
                     <label>Contraseña</label>
-                    <input type="password" id="reg-password" required>
+                    <input type="password" id="reg-password" required placeholder="******">
                 </div>
                 <div class="form-group">
                     <label>Teléfono</label>
-                    <input type="tel" id="reg-telefono" required>
+                    <input type="tel" id="reg-telefono" required placeholder="600123456">
                 </div>
                 <div class="form-group">
                     <label>DNI / Documento</label>
-                    <input type="text" id="reg-dni" required>
+                    <input type="text" id="reg-dni" required placeholder="12345678X">
                 </div>
                 <button type="submit" class="btn btn-success" style="width: 100%;">Crear Cuenta</button>
             </form>
@@ -304,8 +304,8 @@
                             <label>Médico / Especialidad</label>
                             <select id="cita-medico" required>
                                 <option value="">Seleccione un médico</option>
-                                <option value="MED-1">Dr. Carlos Ruiz - Cardiología</option>
-                                <option value="MED-2">Dra. Ana Gómez - Pediatría</option>
+                                <option value="MED-001">Dr. Carlos Ruiz - Medicina General</option>
+                                <option value="MED-002">Dra. Ana Gómez - Pediatría</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -318,7 +318,7 @@
                         </div>
                         <div class="form-group">
                             <label>Motivo de Consulta</label>
-                            <textarea id="cita-motivo" rows="3" required></textarea>
+                            <textarea id="cita-motivo" rows="3" required placeholder="Describa brevemente la razón de su consulta"></textarea>
                         </div>
                         <button type="submit" class="btn btn-success">Confirmar Reserva</button>
                     </form>
@@ -330,12 +330,13 @@
                         <thead>
                             <tr>
                                 <th>Fecha</th>
+                                <th>Hora</th>
                                 <th>Médico</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-citas-paciente">
-                            <tr><td colspan="3">Cargando citas...</td></tr>
+                            <tr><td colspan="4">No tienes citas registradas.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -352,12 +353,13 @@
                             <th>Paciente</th>
                             <th>Médico</th>
                             <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Motivo</th>
                             <th>Estado</th>
-                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tabla-admin-citas">
-                        <tr><td colspan="5">No hay citas registradas.</td></tr>
+                        <tr><td colspan="6">Cargando citas...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -367,18 +369,17 @@
         <section id="view-medico" class="hidden">
             <div class="grid-2">
                 <div class="card">
-                    <h2>Agenda del Día</h2>
+                    <h2>Agenda de Citas</h2>
                     <table>
                         <thead>
                             <tr>
                                 <th>Hora</th>
                                 <th>Paciente</th>
                                 <th>Motivo</th>
-                                <th>Acción</th>
                             </tr>
                         </thead>
                         <tbody id="tabla-medico-agenda">
-                            <tr><td colspan="4">Sin citas para hoy.</td></tr>
+                            <tr><td colspan="3">Cargando agenda...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -388,19 +389,19 @@
                     <form onsubmit="handleGuardarHistoria(event)">
                         <div class="form-group">
                             <label>ID o Nombre del Paciente</label>
-                            <input type="text" id="hist-paciente-id" required placeholder="PAC-12345">
+                            <input type="text" id="hist-paciente-id" required placeholder="Ej. PAC-1710000000">
                         </div>
                         <div class="form-group">
                             <label>Diagnóstico</label>
-                            <textarea id="hist-diagnostico" rows="3" required></textarea>
+                            <textarea id="hist-diagnostico" rows="3" required placeholder="Escriba el diagnóstico"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Tratamiento / Receta</label>
-                            <textarea id="hist-tratamiento" rows="3" required></textarea>
+                            <textarea id="hist-tratamiento" rows="3" required placeholder="Indicaciones médicas y medicamentos"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Notas Observaciones</label>
-                            <textarea id="hist-notas" rows="2"></textarea>
+                            <label>Notas / Observaciones</label>
+                            <textarea id="hist-notas" rows="2" placeholder="Observaciones adicionales"></textarea>
                         </div>
                         <button type="submit" class="btn btn-success">Guardar Registro Médico</button>
                     </form>
@@ -410,12 +411,14 @@
     </main>
 
     <script>
-        // CONFIGURACIÓN: Reemplaza con la URL generada al desplegar tu Google Apps Script como Web App
-        const API_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
+        // =========================================================================
+        // PEGA AQUÍ LA URL DE TU WEB APP DESPLEGADA EN GOOGLE APPS SCRIPT
+        // =========================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbzWgAKYSE5Xwt7Sj8_VuZKEeecKtUqAuw-Xpq7A28bMBGJEHpTL0Fx_G3pkzi1uPyyV/exec";
+        // =========================================================================
 
         let currentUser = null;
 
-        // Petición genérica hacia Google Apps Script (API REST)
         async function apiCall(payload) {
             try {
                 const response = await fetch(API_URL, {
@@ -425,27 +428,25 @@
                 });
                 return await response.json();
             } catch (err) {
-                showAlert('Error al conectar con el servidor', 'error');
+                showAlert('Error de conexión con el servidor', 'error');
                 console.error(err);
                 return { status: 'ERROR' };
             }
         }
 
-        // Gestión de Pestañas Auth
-        function switchAuthTab(tab) {
+        function switchAuthTab(e, tab) {
             document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            
             if (tab === 'login') {
                 document.getElementById('form-login').classList.remove('hidden');
                 document.getElementById('form-register').classList.add('hidden');
-                event.target.classList.add('active');
             } else {
                 document.getElementById('form-login').classList.add('hidden');
                 document.getElementById('form-register').classList.remove('hidden');
-                event.target.classList.add('active');
             }
         }
 
-        // Login
         async function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -457,11 +458,10 @@
                 currentUser = res.user;
                 setupSession();
             } else {
-                showAlert(res.message || 'Credenciales inválidas', 'error');
+                showAlert(res.message || 'Credenciales incorrectas', 'error');
             }
         }
 
-        // Registro Paciente
         async function handleRegister(e) {
             e.preventDefault();
             const datos = {
@@ -475,14 +475,14 @@
 
             const res = await apiCall(datos);
             if (res.status === 'OK') {
-                showAlert('Registro exitoso. Ahora puedes iniciar sesión.', 'success');
-                switchAuthTab('login');
+                showAlert('Registro completado. Ya puedes iniciar sesión.', 'success');
+                document.getElementById('form-register').reset();
+                document.querySelector('.tabs .tab-btn').click();
             } else {
-                showAlert(res.message || 'Error en el registro', 'error');
+                showAlert(res.message || 'Error al registrar usuario', 'error');
             }
         }
 
-        // Crear Cita
         async function handleCrearCita(e) {
             e.preventDefault();
             const datos = {
@@ -498,10 +498,11 @@
             if (res.status === 'OK') {
                 showAlert('Cita agendada correctamente', 'success');
                 e.target.reset();
+            } else {
+                showAlert('Error al agendar cita', 'error');
             }
         }
 
-        // Guardar Historia Médica
         async function handleGuardarHistoria(e) {
             e.preventDefault();
             const datos = {
@@ -515,12 +516,13 @@
 
             const res = await apiCall(datos);
             if (res.status === 'OK') {
-                showAlert('Historia clínica guardada exitosamente', 'success');
+                showAlert('Historia clínica guardada correctamente', 'success');
                 e.target.reset();
+            } else {
+                showAlert('Error al guardar historia médica', 'error');
             }
         }
 
-        // Configuración de vista según rol
         function setupSession() {
             document.getElementById('view-auth').classList.add('hidden');
             document.getElementById('header-user').classList.remove('hidden');
