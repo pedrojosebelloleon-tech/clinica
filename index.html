@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro Médico Esperanza - Gestión Integral</title>
+    <style>
+        :root {
+            --blanco: #FFFFFF;
+            --fondo: #F4F8FA;
+            --azul-claro: #4A90E2;
+            --azul-suave: #EBF3FA;
+            --verde-esperanza: #27AE60;
+            --verde-suave: #E8F8F0;
+            --texto: #2C3E50;
+            --gris-borde: #DCDFE6;
+            --rojo-error: #E74C3C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--fondo);
+            color: var(--texto);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--blanco);
+            border-bottom: 3px solid var(--azul-claro);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--azul-claro);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            background-color: var(--verde-esperanza);
+            color: var(--blanco);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .badge {
+            background-color: var(--verde-suave);
+            color: var(--verde-esperanza);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .card {
+            background-color: var(--blanco);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--azul-claro);
+        }
+
+        .card-verde {
+            border-top-color: var(--verde-esperanza);
+        }
+
+        h2 {
+            color: var(--azul-claro);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gris-borde);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--azul-claro);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background-color: var(--azul-claro);
+            color: var(--blanco);
+        }
+
+        .btn-success {
+            background-color: var(--verde-esperanza);
+            color: var(--blanco);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--gris-borde);
+            color: var(--texto);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gris-borde);
+        }
+
+        th {
+            background-color: var(--azul-suave);
+            color: var(--azul-claro);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--gris-borde);
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--texto);
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--azul-claro);
+            border-bottom-color: var(--azul-claro);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-error {
+            background-color: #FDEDEC;
+            color: var(--rojo-error);
+        }
+
+        .alert-success {
+            background-color: var(--verde-suave);
+            color: var(--verde-esperanza);
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon">+</div>
+            <span>Centro Médico Esperanza</span>
+        </div>
+        <div id="header-user" class="user-info hidden">
+            <span id="user-display-name">Usuario</span>
+            <span id="user-role-badge" class="badge">ROL</span>
+            <button class="btn btn-outline" onclick="logout()">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="alert-box" class="alert hidden"></div>
+
+        <!-- VISTA: AUTENTICACIÓN -->
+        <section id="view-auth" class="card" style="max-width: 450px; margin: 2rem auto;">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchAuthTab('login')">Iniciar Sesión</button>
+                <button class="tab-btn" onclick="switchAuthTab('register')">Registrarse (Pacientes)</button>
+            </div>
+
+            <!-- Formulario Login -->
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="login-email" required placeholder="correo@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="login-password" required placeholder="******">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Ingresar</button>
+            </form>
+
+            <!-- Formulario Registro Paciente -->
+            <form id="form-register" class="hidden" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="reg-nombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="reg-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="reg-password" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" id="reg-telefono" required>
+                </div>
+                <div class="form-group">
+                    <label>DNI / Documento</label>
+                    <input type="text" id="reg-dni" required>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%;">Crear Cuenta</button>
+            </form>
+        </section>
+
+        <!-- VISTA: PACIENTE -->
+        <section id="view-paciente" class="hidden">
+            <div class="grid-2">
+                <div class="card card-verde">
+                    <h2>Reservar Cita Médica</h2>
+                    <form onsubmit="handleCrearCita(event)">
+                        <div class="form-group">
+                            <label>Médico / Especialidad</label>
+                            <select id="cita-medico" required>
+                                <option value="">Seleccione un médico</option>
+                                <option value="MED-1">Dr. Carlos Ruiz - Cardiología</option>
+                                <option value="MED-2">Dra. Ana Gómez - Pediatría</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="date" id="cita-fecha" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Hora</label>
+                            <input type="time" id="cita-hora" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Motivo de Consulta</label>
+                            <textarea id="cita-motivo" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Confirmar Reserva</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>Mis Citas Agendadas</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Médico</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-citas-paciente">
+                            <tr><td colspan="3">Cargando citas...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA: ADMINISTRATIVO -->
+        <section id="view-admin" class="hidden">
+            <div class="card">
+                <h2>Panel de Administración de Citas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Médico</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-admin-citas">
+                        <tr><td colspan="5">No hay citas registradas.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- VISTA: MÉDICO -->
+        <section id="view-medico" class="hidden">
+            <div class="grid-2">
+                <div class="card">
+                    <h2>Agenda del Día</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Paciente</th>
+                                <th>Motivo</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-medico-agenda">
+                            <tr><td colspan="4">Sin citas para hoy.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card card-verde">
+                    <h2>Historia Clínica del Paciente</h2>
+                    <form onsubmit="handleGuardarHistoria(event)">
+                        <div class="form-group">
+                            <label>ID o Nombre del Paciente</label>
+                            <input type="text" id="hist-paciente-id" required placeholder="PAC-12345">
+                        </div>
+                        <div class="form-group">
+                            <label>Diagnóstico</label>
+                            <textarea id="hist-diagnostico" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Tratamiento / Receta</label>
+                            <textarea id="hist-tratamiento" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Notas Observaciones</label>
+                            <textarea id="hist-notas" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Guardar Registro Médico</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // CONFIGURACIÓN: Reemplaza con la URL generada al desplegar tu Google Apps Script como Web App
+        const API_URL = "https://script.google.com/macros/s/TU_SCRIPT_ID_AQUI/exec";
+
+        let currentUser = null;
+
+        // Petición genérica hacia Google Apps Script (API REST)
+        async function apiCall(payload) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                return await response.json();
+            } catch (err) {
+                showAlert('Error al conectar con el servidor', 'error');
+                console.error(err);
+                return { status: 'ERROR' };
+            }
+        }
+
+        // Gestión de Pestañas Auth
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            if (tab === 'login') {
+                document.getElementById('form-login').classList.remove('hidden');
+                document.getElementById('form-register').classList.add('hidden');
+                event.target.classList.add('active');
+            } else {
+                document.getElementById('form-login').classList.add('hidden');
+                document.getElementById('form-register').classList.remove('hidden');
+                event.target.classList.add('active');
+            }
+        }
+
+        // Login
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const res = await apiCall({ action: 'login', email, password });
+
+            if (res.status === 'OK') {
+                currentUser = res.user;
+                setupSession();
+            } else {
+                showAlert(res.message || 'Credenciales inválidas', 'error');
+            }
+        }
+
+        // Registro Paciente
+        async function handleRegister(e) {
+            e.preventDefault();
+            const datos = {
+                action: 'registrarPaciente',
+                nombre: document.getElementById('reg-nombre').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-password').value,
+                telefono: document.getElementById('reg-telefono').value,
+                dni: document.getElementById('reg-dni').value
+            };
+
+            const res = await apiCall(datos);
+            if (res.status === 'OK') {
+                showAlert('Registro exitoso. Ahora puedes iniciar sesión.', 'success');
+                switchAuthTab('login');
+            } else {
+                showAlert(res.message || 'Error en el registro', 'error');
+            }
+        }
+
+        // Crear Cita
+        async function handleCrearCita(e) {
+            e.preventDefault();
+            const datos = {
+                action: 'crearCita',
+                idPaciente: currentUser.id,
+                idMedico: document.getElementById('cita-medico').value,
+                fecha: document.getElementById('cita-fecha').value,
+                hora: document.getElementById('cita-hora').value,
+                motivo: document.getElementById('cita-motivo').value
+            };
+
+            const res = await apiCall(datos);
+            if (res.status === 'OK') {
+                showAlert('Cita agendada correctamente', 'success');
+                e.target.reset();
+            }
+        }
+
+        // Guardar Historia Médica
+        async function handleGuardarHistoria(e) {
+            e.preventDefault();
+            const datos = {
+                action: 'guardarHistoria',
+                idPaciente: document.getElementById('hist-paciente-id').value,
+                idMedico: currentUser.id,
+                diagnostico: document.getElementById('hist-diagnostico').value,
+                tratamiento: document.getElementById('hist-tratamiento').value,
+                notas: document.getElementById('hist-notas').value
+            };
+
+            const res = await apiCall(datos);
+            if (res.status === 'OK') {
+                showAlert('Historia clínica guardada exitosamente', 'success');
+                e.target.reset();
+            }
+        }
+
+        // Configuración de vista según rol
+        function setupSession() {
+            document.getElementById('view-auth').classList.add('hidden');
+            document.getElementById('header-user').classList.remove('hidden');
+            document.getElementById('user-display-name').textContent = currentUser.nombre;
+            document.getElementById('user-role-badge').textContent = currentUser.rol;
+
+            if (currentUser.rol === 'PACIENTE') {
+                document.getElementById('view-paciente').classList.remove('hidden');
+            } else if (currentUser.rol === 'ADMIN') {
+                document.getElementById('view-admin').classList.remove('hidden');
+            } else if (currentUser.rol === 'MEDICO') {
+                document.getElementById('view-medico').classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('header-user').classList.add('hidden');
+            document.getElementById('view-paciente').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('view-medico').classList.add('hidden');
+            document.getElementById('view-auth').classList.remove('hidden');
+        }
+
+        function showAlert(msg, type) {
+            const box = document.getElementById('alert-box');
+            box.textContent = msg;
+            box.className = `alert alert-${type === 'error' ? 'error' : 'success'}`;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 4000);
+        }
+    </script>
+</body>
+</html>
