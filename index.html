@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro Médico Esperanza - Gestión Integral</title>
+    <title>Centro Médico Esperanza</title>
     <style>
         :root {
             --blanco: #FFFFFF;
@@ -248,8 +248,18 @@
     <main>
         <div id="alert-box" class="alert hidden"></div>
 
+        <!-- CONFIGURACIÓN DE CONEXIÓN CON APPS SCRIPT -->
+        <section id="view-config" class="card" style="max-width: 600px; margin: 1rem auto;">
+            <h2>Conexión con la Base de Datos</h2>
+            <div class="form-group">
+                <label>URL de la Web App de Google Apps Script</label>
+                <input type="url" id="config-api-url" placeholder="https://script.google.com/macros/s/.../exec">
+            </div>
+            <button class="btn btn-primary" onclick="guardarUrlApi()">Guardar URL y Continuar</button>
+        </section>
+
         <!-- VISTA: AUTENTICACIÓN -->
-        <section id="view-auth" class="card" style="max-width: 450px; margin: 2rem auto;">
+        <section id="view-auth" class="card hidden" style="max-width: 450px; margin: 2rem auto;">
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchAuthTab(event, 'login')">Iniciar Sesión</button>
                 <button class="tab-btn" onclick="switchAuthTab(event, 'register')">Registrarse (Pacientes)</button>
@@ -411,13 +421,29 @@
     </main>
 
     <script>
-        // =========================================================================
-        // PEGA AQUÍ LA URL DE TU WEB APP DESPLEGADA EN GOOGLE APPS SCRIPT
-        // =========================================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzzm3OLVPJNgtgL1KEadZWMecLqH8Z6HLCdYzCr875i3uKXye-mym9iPEsRfst7dG6K/exec";
-        // =========================================================================
-
+        let API_URL = localStorage.getItem('MEDICO_API_URL') || '';
         let currentUser = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (API_URL) {
+                document.getElementById('config-api-url').value = API_URL;
+                document.getElementById('view-config').classList.add('hidden');
+                document.getElementById('view-auth').classList.remove('hidden');
+            }
+        });
+
+        function guardarUrlApi() {
+            const url = document.getElementById('config-api-url').value.trim();
+            if (!url) {
+                showAlert('Por favor ingresa la URL de Apps Script', 'error');
+                return;
+            }
+            API_URL = url;
+            localStorage.setItem('MEDICO_API_URL', url);
+            document.getElementById('view-config').classList.add('hidden');
+            document.getElementById('view-auth').classList.remove('hidden');
+            showAlert('URL guardada correctamente', 'success');
+        }
 
         async function apiCall(payload) {
             try {
