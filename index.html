@@ -1,629 +1,710 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro Médico Esperanza - Software de Gestión</title>
-    <style>
-        :root {
-            --blanco: #FFFFFF;
-            --fondo: #F4F8FA;
-            --azul-claro: #4A90E2;
-            --azul-oscuro: #2C3E50;
-            --azul-suave: #EBF3FA;
-            --verde-esperanza: #27AE60;
-            --verde-suave: #E8F8F0;
-            --gris-borde: #DCDFE6;
-            --rojo-error: #E74C3C;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro Médico | Portal de gestión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blanco:#ffffff;
+    --azul-claro:#eaf4fb;
+    --azul-claro-2:#d3e9f7;
+    --azul:#3f83c9;
+    --azul-oscuro:#2c5f8a;
+    --verde:#4caf7d;
+    --verde-oscuro:#398c63;
+    --texto:#223047;
+    --texto-suave:#5c6b7a;
+    --borde:#d7e6f0;
+    --peligro:#d9534f;
+    --alerta:#e0a94b;
+    --sombra:0 4px 16px rgba(44,95,138,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--texto);
+    background:var(--azul-claro);
+    min-height:100vh;
+  }
+  h1,h2,h3,h4{font-family:'Poppins',sans-serif;margin:0 0 6px;font-weight:600;}
+  p{margin:0 0 10px;color:var(--texto-suave);}
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  /* ---------- ENCABEZADO ---------- */
+  .topbar{
+    background:var(--blanco);
+    border-bottom:1px solid var(--borde);
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .marca{display:flex;align-items:center;gap:10px;}
+  .marca .punto{width:12px;height:12px;border-radius:50%;background:var(--verde);}
+  .marca span{font-family:'Poppins',sans-serif;font-weight:700;font-size:18px;color:var(--azul-oscuro);}
+  .usuario-actual{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--texto-suave);}
+  .btn-salir{
+    background:none;border:1px solid var(--borde);color:var(--texto-suave);
+    padding:7px 14px;border-radius:8px;font-size:13px;
+  }
+  .btn-salir:hover{border-color:var(--peligro);color:var(--peligro);}
 
-        body {
-            background-color: var(--fondo);
-            color: var(--azul-oscuro);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+  /* ---------- PANTALLA DE SELECCIÓN DE PORTAL ---------- */
+  .portada{
+    max-width:760px;margin:60px auto;padding:0 20px;text-align:center;
+  }
+  .portada .punto-grande{
+    width:54px;height:54px;border-radius:16px;
+    background:linear-gradient(135deg,var(--verde),var(--azul));
+    margin:0 auto 18px;
+  }
+  .portada h1{font-size:30px;color:var(--azul-oscuro);}
+  .portada p.lead{font-size:16px;max-width:480px;margin:0 auto 34px;}
+  .opciones-portal{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;}
+  .opciones-portal-paciente{gap:14px;margin-bottom:22px;}
+  .btn-hero{
+    background:var(--verde);color:var(--blanco);border:none;
+    padding:14px 28px;border-radius:10px;font-weight:600;font-size:15px;
+  }
+  .btn-hero:hover{background:var(--verde-oscuro);}
+  .btn-hero-secundario{
+    background:var(--blanco);color:var(--azul-oscuro);border:1px solid var(--borde);
+  }
+  .btn-hero-secundario:hover{border-color:var(--azul);color:var(--azul);background:var(--blanco);}
+  .acceso-personal{
+    font-size:13px;color:var(--texto-suave);
+  }
+  .acceso-personal a{color:var(--azul-oscuro);text-decoration:none;font-weight:600;cursor:pointer;border-bottom:1px dashed var(--azul-oscuro);}
+  .acceso-personal a:hover{color:var(--azul);border-color:var(--azul);}
+  .tarjeta-portal{
+    background:var(--blanco);border:1px solid var(--borde);border-radius:14px;
+    padding:26px 24px;width:220px;box-shadow:var(--sombra);text-align:left;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .tarjeta-portal:hover{transform:translateY(-3px);border-color:var(--azul);}
+  .tarjeta-portal h3{color:var(--azul-oscuro);font-size:17px;}
+  .tarjeta-portal p{font-size:13.5px;margin-bottom:16px;}
+  .tarjeta-portal button{
+    width:100%;background:var(--azul);color:var(--blanco);border:none;
+    padding:10px;border-radius:8px;font-weight:600;font-size:14px;
+  }
+  .tarjeta-portal button:hover{background:var(--azul-oscuro);}
 
-        header {
-            background-color: var(--blanco);
-            border-bottom: 3px solid var(--azul-claro);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
+  /* ---------- FORMULARIOS DE ACCESO ---------- */
+  .contenedor-auth{max-width:420px;margin:50px auto;padding:0 20px;}
+  .tarjeta-auth{
+    background:var(--blanco);border:1px solid var(--borde);border-radius:14px;
+    padding:32px 28px;box-shadow:var(--sombra);
+  }
+  .tarjeta-auth h2{color:var(--azul-oscuro);font-size:21px;}
+  .volver{
+    background:none;border:none;color:var(--texto-suave);font-size:13px;
+    margin-bottom:16px;padding:0;display:inline-flex;align-items:center;gap:4px;
+  }
+  .volver:hover{color:var(--azul);}
+  .campo{margin-bottom:14px;}
+  .campo label{display:block;font-size:13px;font-weight:500;margin-bottom:5px;color:var(--texto);}
+  .campo input,.campo select,.campo textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--borde);border-radius:8px;
+    font-size:14px;background:var(--azul-claro);color:var(--texto);
+  }
+  .campo input:focus,.campo select:focus,.campo textarea:focus{
+    outline:none;border-color:var(--azul);background:var(--blanco);
+  }
+  .fila-doble{display:flex;gap:12px;}
+  .fila-doble .campo{flex:1;}
+  .btn-primario{
+    width:100%;background:var(--verde);color:var(--blanco);border:none;
+    padding:12px;border-radius:8px;font-weight:600;font-size:14.5px;margin-top:6px;
+  }
+  .btn-primario:hover{background:var(--verde-oscuro);}
+  .btn-primario:disabled{opacity:.6;cursor:default;}
+  .enlace-cambio{text-align:center;font-size:13.5px;margin-top:16px;color:var(--texto-suave);}
+  .enlace-cambio a{color:var(--azul);text-decoration:none;font-weight:600;cursor:pointer;}
+  .mensaje{
+    padding:10px 12px;border-radius:8px;font-size:13.5px;margin-bottom:14px;display:none;
+  }
+  .mensaje.error{background:#fbeaea;color:var(--peligro);display:block;}
+  .mensaje.exito{background:#e8f6ee;color:var(--verde-oscuro);display:block;}
+  .selector-rol{display:flex;gap:8px;margin-bottom:18px;}
+  .selector-rol button{
+    flex:1;padding:9px;border:1px solid var(--borde);background:var(--azul-claro);
+    border-radius:8px;font-size:13px;font-weight:600;color:var(--texto-suave);
+  }
+  .selector-rol button.activo{background:var(--azul);color:var(--blanco);border-color:var(--azul);}
 
-        .logo {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: var(--azul-claro);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+  /* ---------- LAYOUT DE PANELES (APP) ---------- */
+  .app-layout{display:flex;min-height:calc(100vh - 61px);}
+  .barra-lateral{
+    width:210px;background:var(--blanco);border-right:1px solid var(--borde);
+    padding:20px 12px;flex-shrink:0;
+  }
+  .barra-lateral button{
+    width:100%;text-align:left;background:none;border:none;padding:11px 14px;
+    border-radius:8px;font-size:14px;color:var(--texto-suave);margin-bottom:4px;font-weight:500;
+  }
+  .barra-lateral button.activo{background:var(--azul-claro-2);color:var(--azul-oscuro);font-weight:600;}
+  .barra-lateral button:hover{background:var(--azul-claro);}
+  .contenido{flex:1;padding:28px 32px;max-width:980px;}
+  .contenido h2{color:var(--azul-oscuro);font-size:22px;margin-bottom:4px;}
+  .subtitulo{margin-bottom:22px;}
 
-        .logo-icon {
-            background-color: var(--verde-esperanza);
-            color: var(--blanco);
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .badge {
-            background-color: var(--verde-suave);
-            color: var(--verde-esperanza);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: bold;
-        }
-
-        main {
-            flex: 1;
-            padding: 2rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .card {
-            background-color: var(--blanco);
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-            border-top: 4px solid var(--azul-claro);
-        }
-
-        .card-verde {
-            border-top-color: var(--verde-esperanza);
-        }
-
-        h2 {
-            color: var(--azul-claro);
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.4rem;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--gris-borde);
-            border-radius: 6px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--azul-claro);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .btn-primary {
-            background-color: var(--azul-claro);
-            color: var(--blanco);
-        }
-
-        .btn-success {
-            background-color: var(--verde-esperanza);
-            color: var(--blanco);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--gris-borde);
-            color: var(--azul-oscuro);
-        }
-
-        .btn-sm {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        th, td {
-            padding: 0.75rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--gris-borde);
-        }
-
-        th {
-            background-color: var(--azul-suave);
-            color: var(--azul-claro);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--gris-borde);
-        }
-
-        .tab-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--azul-oscuro);
-            border-bottom: 3px solid transparent;
-        }
-
-        .tab-btn.active {
-            color: var(--azul-claro);
-            border-bottom-color: var(--azul-claro);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .alert-error {
-            background-color: #FDEDEC;
-            color: var(--rojo-error);
-            border: 1px solid #F5C6CB;
-        }
-
-        .alert-success {
-            background-color: var(--verde-suave);
-            color: var(--verde-esperanza);
-            border: 1px solid #C3E6CB;
-        }
-
-        .config-bar {
-            background-color: var(--azul-suave);
-            border: 1px solid var(--azul-claro);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+  /* ---------- TARJETAS Y TABLAS ---------- */
+  .panel{
+    background:var(--blanco);border:1px solid var(--borde);border-radius:12px;
+    padding:20px;margin-bottom:20px;
+  }
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{
+    text-align:left;padding:10px 8px;color:var(--texto-suave);
+    border-bottom:1px solid var(--borde);font-weight:600;font-size:12.5px;text-transform:none;
+  }
+  td{padding:11px 8px;border-bottom:1px solid var(--azul-claro-2);}
+  tr:last-child td{border-bottom:none;}
+  .vacio{color:var(--texto-suave);font-size:13.5px;padding:16px 0;text-align:center;}
+  .badge{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;display:inline-block;}
+  .badge.Pendiente{background:#fdf0dc;color:#a8751f;}
+  .badge.Confirmada{background:#e8f6ee;color:var(--verde-oscuro);}
+  .badge.Cancelada{background:#fbeaea;color:var(--peligro);}
+  .badge.Atendida{background:#e6eef8;color:var(--azul-oscuro);}
+  select.mini{
+    padding:5px 8px;border-radius:6px;border:1px solid var(--borde);font-size:12.5px;background:var(--azul-claro);
+  }
+  .btn-chico{
+    background:none;border:1px solid var(--borde);color:var(--texto-suave);
+    padding:5px 10px;border-radius:6px;font-size:12px;margin-right:4px;
+  }
+  .btn-chico:hover{border-color:var(--azul);color:var(--azul);}
+  .btn-chico.peligro:hover{border-color:var(--peligro);color:var(--peligro);}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:800px){
+    .app-layout{flex-direction:column;}
+    .barra-lateral{width:100%;display:flex;overflow-x:auto;padding:10px;}
+    .barra-lateral button{white-space:nowrap;width:auto;}
+    .grid-2{grid-template-columns:1fr;}
+  }
+  .pantalla{display:none;}
+  .pantalla.activa{display:block;}
+</style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">
-            <div class="logo-icon">+</div>
-            <span>Centro Médico Esperanza</span>
+<!-- ============ ENCABEZADO ============ -->
+<div class="topbar">
+  <div class="marca"><div class="punto"></div><span>Centro Médico</span></div>
+  <div class="usuario-actual" id="cajaUsuario" style="display:none;">
+    <span id="nombreUsuarioActual"></span>
+    <button class="btn-salir" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+</div>
+
+<!-- ============ PORTADA: ORIENTADA A PACIENTES ============ -->
+<div class="pantalla activa" id="pantalla-portada">
+  <div class="portada">
+    <div class="punto-grande"></div>
+    <h1>Pide tu cita en el centro médico</h1>
+    <p class="lead">Reserva con el especialista que necesitas, consulta el estado de tus citas y gestiona tu cuenta, todo en un mismo lugar.</p>
+    <div class="opciones-portal opciones-portal-paciente">
+      <button class="btn-hero" onclick="mostrar('pantalla-paciente-login')">Iniciar sesión</button>
+      <button class="btn-hero btn-hero-secundario" onclick="mostrar('pantalla-paciente-registro')">Crear una cuenta</button>
+    </div>
+    <div class="acceso-personal">
+      ¿Trabajas en el centro? <a onclick="irLoginPersonal()">Acceso para administración y médicos</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN PACIENTE ============ -->
+<div class="pantalla" id="pantalla-paciente-login">
+  <div class="contenedor-auth">
+    <button class="volver" onclick="mostrar('pantalla-portada')">&larr; Volver</button>
+    <div class="tarjeta-auth">
+      <h2>Acceso de pacientes</h2>
+      <p>Entra con tu correo y contraseña.</p>
+      <div class="mensaje" id="msj-paciente-login"></div>
+      <div class="campo"><label>Correo electrónico</label><input type="email" id="pl-email"></div>
+      <div class="campo"><label>Contraseña</label><input type="password" id="pl-password"></div>
+      <button class="btn-primario" onclick="loginPaciente()">Entrar</button>
+      <div class="enlace-cambio">¿No tienes cuenta? <a onclick="mostrar('pantalla-paciente-registro')">Regístrate</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REGISTRO PACIENTE ============ -->
+<div class="pantalla" id="pantalla-paciente-registro">
+  <div class="contenedor-auth">
+    <button class="volver" onclick="mostrar('pantalla-paciente-login')">&larr; Volver</button>
+    <div class="tarjeta-auth">
+      <h2>Crear cuenta de paciente</h2>
+      <p>Regístrate para poder pedir tus citas.</p>
+      <div class="mensaje" id="msj-paciente-registro"></div>
+      <div class="campo"><label>Nombre completo</label><input type="text" id="pr-nombre"></div>
+      <div class="campo"><label>Correo electrónico</label><input type="email" id="pr-email"></div>
+      <div class="fila-doble">
+        <div class="campo"><label>Teléfono</label><input type="tel" id="pr-telefono"></div>
+        <div class="campo"><label>Fecha de nacimiento</label><input type="date" id="pr-fecha"></div>
+      </div>
+      <div class="campo"><label>Contraseña</label><input type="password" id="pr-password"></div>
+      <button class="btn-primario" onclick="registrarPaciente()">Crear cuenta</button>
+      <div class="enlace-cambio">¿Ya tienes cuenta? <a onclick="mostrar('pantalla-paciente-login')">Inicia sesión</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN PERSONAL (ADMIN / MÉDICO) ============ -->
+<div class="pantalla" id="pantalla-personal-login">
+  <div class="contenedor-auth">
+    <button class="volver" onclick="mostrar('pantalla-portada')">&larr; Volver</button>
+    <div class="tarjeta-auth">
+      <h2>Acceso del personal</h2>
+      <p>Para administrativos y médicos del centro.</p>
+      <div class="mensaje" id="msj-personal-login"></div>
+      <div class="campo"><label>Correo electrónico</label><input type="email" id="stl-email"></div>
+      <div class="campo"><label>Contraseña</label><input type="password" id="stl-password"></div>
+      <button class="btn-primario" onclick="loginPersonal()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP PACIENTE ============ -->
+<div class="pantalla" id="pantalla-app-paciente">
+  <div class="app-layout">
+    <div class="barra-lateral">
+      <button class="activo" data-tab="p-nueva" onclick="tabPaciente('p-nueva',this)">Pedir cita</button>
+      <button data-tab="p-mias" onclick="tabPaciente('p-mias',this)">Mis citas</button>
+    </div>
+    <div class="contenido">
+      <div id="p-nueva">
+        <h2>Solicitar una cita</h2>
+        <p class="subtitulo">Elige un médico, fecha y hora disponible.</p>
+        <div class="panel" style="max-width:480px;">
+          <div class="mensaje" id="msj-nueva-cita"></div>
+          <div class="campo"><label>Médico</label><select id="nc-medico"></select></div>
+          <div class="fila-doble">
+            <div class="campo"><label>Fecha</label><input type="date" id="nc-fecha"></div>
+            <div class="campo"><label>Hora</label><input type="time" id="nc-hora"></div>
+          </div>
+          <div class="campo"><label>Motivo de la consulta</label><textarea id="nc-motivo" rows="3"></textarea></div>
+          <button class="btn-primario" onclick="crearCita()">Solicitar cita</button>
         </div>
-        <div class="header-controls">
-            <button class="btn btn-outline btn-sm" onclick="toggleConfigPanel()">⚙️ Configurar URL AppScript</button>
-            <div id="header-user" class="hidden" style="display: flex; align-items: center; gap: 10px;">
-                <span id="user-display-name" style="font-weight: 600;">Usuario</span>
-                <span id="user-role-badge" class="badge">ROL</span>
-                <button class="btn btn-outline btn-sm" onclick="logout()">Cerrar Sesión</button>
+      </div>
+      <div id="p-mias" style="display:none;">
+        <h2>Mis citas</h2>
+        <p class="subtitulo">Estado de tus citas solicitadas.</p>
+        <div class="panel"><table id="tabla-citas-paciente"><thead><tr><th>Médico</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ADMINISTRACIÓN ============ -->
+<div class="pantalla" id="pantalla-app-admin">
+  <div class="app-layout">
+    <div class="barra-lateral">
+      <button class="activo" data-tab="a-citas" onclick="tabAdmin('a-citas',this)">Citas</button>
+      <button data-tab="a-pacientes" onclick="tabAdmin('a-pacientes',this)">Pacientes</button>
+      <button data-tab="a-personal" onclick="tabAdmin('a-personal',this)">Personal</button>
+    </div>
+    <div class="contenido">
+      <div id="a-citas">
+        <h2>Todas las citas</h2>
+        <p class="subtitulo">Gestiona el estado de las citas del centro.</p>
+        <div class="panel"><table id="tabla-citas-admin"><thead><tr><th>Paciente</th><th>Médico</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div id="a-pacientes" style="display:none;">
+        <h2>Pacientes registrados</h2>
+        <p class="subtitulo">Listado de todas las cuentas de pacientes.</p>
+        <div class="panel"><table id="tabla-pacientes-admin"><thead><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div id="a-personal" style="display:none;">
+        <h2>Personal del centro</h2>
+        <p class="subtitulo">Añade o elimina cuentas de administrativos y médicos.</p>
+        <div class="grid-2">
+          <div class="panel">
+            <h3 style="font-size:15px;">Nuevo usuario</h3>
+            <div class="mensaje" id="msj-nuevo-personal"></div>
+            <div class="campo"><label>Nombre</label><input type="text" id="np-nombre"></div>
+            <div class="campo"><label>Correo</label><input type="email" id="np-email"></div>
+            <div class="campo"><label>Contraseña</label><input type="password" id="np-password"></div>
+            <div class="campo"><label>Rol</label>
+              <select id="np-rol" onchange="document.getElementById('campo-especialidad').style.display = this.value==='medico' ? 'block':'none';">
+                <option value="admin">Administrativo</option>
+                <option value="medico">Médico</option>
+              </select>
             </div>
+            <div class="campo" id="campo-especialidad"><label>Especialidad</label><input type="text" id="np-especialidad"></div>
+            <button class="btn-primario" onclick="crearPersonal()">Crear usuario</button>
+          </div>
+          <div class="panel">
+            <h3 style="font-size:15px;">Usuarios actuales</h3>
+            <table id="tabla-personal-admin"><thead><tr><th>Nombre</th><th>Rol</th><th></th></tr></thead><tbody></tbody></table>
+          </div>
         </div>
-    </header>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <main>
-        <div id="alert-box" class="alert hidden"></div>
+<!-- ============ APP MÉDICO ============ -->
+<div class="pantalla" id="pantalla-app-medico">
+  <div class="app-layout">
+    <div class="barra-lateral">
+      <button class="activo" data-tab="m-agenda" onclick="tabMedico('m-agenda',this)">Mi agenda</button>
+      <button data-tab="m-pacientes" onclick="tabMedico('m-pacientes',this)">Historiales</button>
+    </div>
+    <div class="contenido">
+      <div id="m-agenda">
+        <h2>Mi agenda</h2>
+        <p class="subtitulo">Citas asignadas a tu consulta.</p>
+        <div class="panel"><table id="tabla-citas-medico"><thead><tr><th>Paciente</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div id="m-pacientes" style="display:none;">
+        <h2>Historiales clínicos</h2>
+        <p class="subtitulo">Busca un paciente para ver o añadir un registro.</p>
+        <div class="panel" style="max-width:420px;">
+          <div class="campo"><label>Buscar paciente por nombre o correo</label><input type="text" id="bp-termino" oninput="buscarPacientes()"></div>
+          <div id="bp-resultados"></div>
+        </div>
+        <div class="panel" id="panel-historial" style="display:none;">
+          <h3 id="historial-nombre-paciente" style="font-size:16px;"></h3>
+          <table id="tabla-historial"><thead><tr><th>Fecha</th><th>Médico</th><th>Diagnóstico</th><th>Tratamiento</th><th>Notas</th></tr></thead><tbody></tbody></table>
+          <h4 style="margin-top:18px;font-size:14px;">Añadir nuevo registro</h4>
+          <div class="mensaje" id="msj-historial"></div>
+          <div class="campo"><label>Diagnóstico</label><input type="text" id="hh-diagnostico"></div>
+          <div class="campo"><label>Tratamiento</label><input type="text" id="hh-tratamiento"></div>
+          <div class="campo"><label>Notas</label><textarea id="hh-notas" rows="2"></textarea></div>
+          <button class="btn-primario" onclick="agregarHistorial()">Guardar registro</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <!-- PANEL DE CONFIGURACIÓN DE LA URL DE APPS SCRIPT -->
-        <section id="view-config" class="config-bar">
-            <h2>🔗 Configuración de Conexión (Base de Datos)</h2>
-            <p style="margin-bottom: 1rem; font-size: 0.9rem;">
-                Pega aquí la <strong>URL de la Aplicación Web</strong> que obtuviste al implantar tu Google Apps Script (debe terminar en <code>/exec</code>):
-            </p>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <input type="url" id="config-api-url" placeholder="https://script.google.com/macros/s/.../exec" style="flex: 1; min-width: 280px;">
-                <button class="btn btn-primary" onclick="guardarUrlApi()">Guardar URL</button>
-            </div>
-        </section>
+<script>
+/* =====================================================================
+   PEGA AQUÍ LA URL DE TU APPS SCRIPT (termina en /exec)
+   Ejemplo: https://script.google.com/macros/s/AKfycb.../exec
+   ===================================================================== */
+const APPS_SCRIPT_URL = "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT";
 
-        <!-- VISTA: AUTENTICACIÓN (LOGIN Y REGISTRO) -->
-        <section id="view-auth" class="card" style="max-width: 450px; margin: 1rem auto;">
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchAuthTab(event, 'login')">Iniciar Sesión</button>
-                <button class="tab-btn" onclick="switchAuthTab(event, 'register')">Registrarse (Pacientes)</button>
-            </div>
+/* ---------------- ESTADO ---------------- */
+let sesion = JSON.parse(localStorage.getItem('sesion') || 'null');
+let pacienteSeleccionadoHistorial = null;
 
-            <!-- Formulario Login -->
-            <form id="form-login" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label>Correo Electrónico</label>
-                    <input type="email" id="login-email" required placeholder="correo@ejemplo.com">
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="login-password" required placeholder="******">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Ingresar</button>
-            </form>
+/* ---------------- LLAMADAS AL BACKEND ---------------- */
+async function llamarAPI(action, datos) {
+  const cuerpo = Object.assign({ action: action }, datos || {});
+  const respuesta = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS
+    body: JSON.stringify(cuerpo)
+  });
+  return respuesta.json();
+}
 
-            <!-- Formulario Registro Paciente -->
-            <form id="form-register" class="hidden" onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" id="reg-nombre" required placeholder="Juan Pérez">
-                </div>
-                <div class="form-group">
-                    <label>Correo Electrónico</label>
-                    <input type="email" id="reg-email" required placeholder="juan@ejemplo.com">
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="reg-password" required placeholder="******">
-                </div>
-                <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="tel" id="reg-telefono" required placeholder="600123456">
-                </div>
-                <div class="form-group">
-                    <label>DNI / Documento</label>
-                    <input type="text" id="reg-dni" required placeholder="12345678X">
-                </div>
-                <button type="submit" class="btn btn-success" style="width: 100%;">Crear Cuenta</button>
-            </form>
-        </section>
+/* ---------------- NAVEGACIÓN ENTRE PANTALLAS ---------------- */
+function mostrar(id) {
+  document.querySelectorAll('.pantalla').forEach(function (p) { p.classList.remove('activa'); });
+  document.getElementById(id).classList.add('activa');
+}
+function irLoginPersonal() { mostrar('pantalla-personal-login'); }
 
-        <!-- VISTA: PACIENTE -->
-        <section id="view-paciente" class="hidden">
-            <div class="grid-2">
-                <div class="card card-verde">
-                    <h2>Reservar Cita Médica</h2>
-                    <form onsubmit="handleCrearCita(event)">
-                        <div class="form-group">
-                            <label>Médico / Especialidad</label>
-                            <select id="cita-medico" required>
-                                <option value="">Seleccione un médico</option>
-                                <option value="MED-001">Dr. Carlos Ruiz - Medicina General</option>
-                                <option value="MED-002">Dra. Ana Gómez - Pediatría</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Fecha</label>
-                            <input type="date" id="cita-fecha" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Hora</label>
-                            <input type="time" id="cita-hora" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Motivo de Consulta</label>
-                            <textarea id="cita-motivo" rows="3" required placeholder="Describa brevemente el motivo de su consulta"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Confirmar Reserva</button>
-                    </form>
-                </div>
+function mostrarMensaje(id, texto, tipo) {
+  const el = document.getElementById(id);
+  el.textContent = texto;
+  el.className = 'mensaje ' + tipo;
+}
 
-                <div class="card">
-                    <h2>Mis Citas Agendadas</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Médico</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-citas-paciente">
-                            <tr><td colspan="4" style="text-align: center;">No hay citas registradas.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+/* ---------------- SESIÓN ---------------- */
+function guardarSesion(s) {
+  sesion = s;
+  localStorage.setItem('sesion', JSON.stringify(s));
+  aplicarSesion();
+}
+function cerrarSesion() {
+  sesion = null;
+  localStorage.removeItem('sesion');
+  document.getElementById('cajaUsuario').style.display = 'none';
+  mostrar('pantalla-portada');
+}
+function aplicarSesion() {
+  if (!sesion) return;
+  document.getElementById('cajaUsuario').style.display = 'flex';
+  document.getElementById('nombreUsuarioActual').textContent = sesion.nombre + ' · ' + sesion.tipoTexto;
 
-        <!-- VISTA: ADMINISTRATIVO -->
-        <section id="view-admin" class="hidden">
-            <div class="card">
-                <h2>Panel de Administración de Citas</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID Cita</th>
-                            <th>Paciente</th>
-                            <th>Médico</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-admin-citas">
-                        <tr><td colspan="6" style="text-align: center;">Sin registros de citas.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+  if (sesion.tipo === 'paciente') {
+    mostrar('pantalla-app-paciente');
+    cargarMedicosParaCita();
+    cargarMisCitas();
+  } else if (sesion.tipo === 'admin') {
+    mostrar('pantalla-app-admin');
+    cargarCitasAdmin();
+    cargarPacientesAdmin();
+    cargarPersonalAdmin();
+  } else if (sesion.tipo === 'medico') {
+    mostrar('pantalla-app-medico');
+    cargarCitasMedico();
+  }
+}
 
-        <!-- VISTA: MÉDICO -->
-        <section id="view-medico" class="hidden">
-            <div class="grid-2">
-                <div class="card">
-                    <h2>Agenda de Consultas</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Hora</th>
-                                <th>ID Paciente</th>
-                                <th>Motivo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-medico-agenda">
-                            <tr><td colspan="3" style="text-align: center;">Sin consultas asignadas.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+/* ---------------- AUTENTICACIÓN: PACIENTES ---------------- */
+async function registrarPaciente() {
+  const datos = {
+    nombre: document.getElementById('pr-nombre').value.trim(),
+    email: document.getElementById('pr-email').value.trim(),
+    telefono: document.getElementById('pr-telefono').value.trim(),
+    fechaNacimiento: document.getElementById('pr-fecha').value,
+    password: document.getElementById('pr-password').value
+  };
+  if (!datos.nombre || !datos.email || !datos.password) {
+    mostrarMensaje('msj-paciente-registro', 'Completa nombre, correo y contraseña.', 'error'); return;
+  }
+  const res = await llamarAPI('registrarPaciente', datos);
+  if (res.exito) {
+    mostrarMensaje('msj-paciente-registro', 'Cuenta creada. Ya puedes iniciar sesión.', 'exito');
+    setTimeout(function () { mostrar('pantalla-paciente-login'); }, 1200);
+  } else {
+    mostrarMensaje('msj-paciente-registro', res.mensaje, 'error');
+  }
+}
 
-                <div class="card card-verde">
-                    <h2>Historia Clínica del Paciente</h2>
-                    <form onsubmit="handleGuardarHistoria(event)">
-                        <div class="form-group">
-                            <label>ID Paciente</label>
-                            <input type="text" id="hist-paciente-id" required placeholder="Ej. PAC-1710000000">
-                        </div>
-                        <div class="form-group">
-                            <label>Diagnóstico</label>
-                            <textarea id="hist-diagnostico" rows="3" required placeholder="Escriba el diagnóstico del paciente"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Tratamiento / Receta</label>
-                            <textarea id="hist-tratamiento" rows="3" required placeholder="Medicamentos e indicaciones"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Notas / Observaciones</label>
-                            <textarea id="hist-notas" rows="2" placeholder="Observaciones adicionales"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Guardar Historia Médica</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
+async function loginPaciente() {
+  const datos = { email: document.getElementById('pl-email').value.trim(), password: document.getElementById('pl-password').value };
+  const res = await llamarAPI('loginPaciente', datos);
+  if (res.exito) {
+    guardarSesion({ tipo: 'paciente', tipoTexto: 'Paciente', id: res.paciente.id, nombre: res.paciente.nombre, email: res.paciente.email });
+  } else {
+    mostrarMensaje('msj-paciente-login', res.mensaje, 'error');
+  }
+}
 
-    <script>
-        let API_URL = localStorage.getItem('MEDICO_API_URL') || '';
-        let currentUser = null;
+/* ---------------- AUTENTICACIÓN: PERSONAL ---------------- */
+async function loginPersonal() {
+  const datos = { email: document.getElementById('stl-email').value.trim(), password: document.getElementById('stl-password').value };
+  const res = await llamarAPI('loginPersonal', datos);
+  if (res.exito) {
+    const rol = res.usuario.rol; // 'admin' o 'medico'
+    guardarSesion({
+      tipo: rol, tipoTexto: rol === 'admin' ? 'Administración' : 'Médico',
+      id: res.usuario.id, nombre: res.usuario.nombre, especialidad: res.usuario.especialidad
+    });
+  } else {
+    mostrarMensaje('msj-personal-login', res.mensaje, 'error');
+  }
+}
 
-        // Cargar URL guardada previamente
-        window.addEventListener('DOMContentLoaded', () => {
-            if (API_URL) {
-                document.getElementById('config-api-url').value = API_URL;
-                document.getElementById('view-config').classList.add('hidden');
-            } else {
-                showAlert('Por favor, ingresa la URL de Apps Script para conectar la base de datos.', 'error');
-            }
-        });
+/* ---------------- PESTAÑAS INTERNAS ---------------- */
+function cambiarTab(prefijo, tabId, boton) {
+  document.querySelectorAll('#pantalla-app-' + prefijo + ' .barra-lateral button').forEach(function (b) { b.classList.remove('activo'); });
+  boton.classList.add('activo');
+  document.querySelectorAll('#pantalla-app-' + prefijo + ' .contenido > div').forEach(function (d) { d.style.display = 'none'; });
+  document.getElementById(tabId).style.display = 'block';
+}
+function tabPaciente(id, btn) { cambiarTab('paciente', id, btn); }
+function tabAdmin(id, btn) { cambiarTab('admin', id, btn); }
+function tabMedico(id, btn) { cambiarTab('medico', id, btn); }
 
-        function toggleConfigPanel() {
-            const panel = document.getElementById('view-config');
-            panel.classList.toggle('hidden');
-        }
+/* ---------------- PORTAL PACIENTE ---------------- */
+async function cargarMedicosParaCita() {
+  const res = await llamarAPI('obtenerMedicos', {});
+  const select = document.getElementById('nc-medico');
+  select.innerHTML = '';
+  if (res.exito) {
+    res.medicos.forEach(function (m) {
+      const op = document.createElement('option');
+      op.value = m.id; op.dataset.nombre = m.nombre;
+      op.textContent = m.nombre + (m.especialidad ? ' — ' + m.especialidad : '');
+      select.appendChild(op);
+    });
+  }
+}
 
-        function guardarUrlApi() {
-            let url = document.getElementById('config-api-url').value.trim();
-            if (!url) {
-                showAlert('Debes pegar una URL válida de Apps Script.', 'error');
-                return;
-            }
-            if (!url.startsWith('https://script.google.com/')) {
-                showAlert('La URL debe comenzar por https://script.google.com/', 'error');
-                return;
-            }
-            API_URL = url;
-            localStorage.setItem('MEDICO_API_URL', url);
-            document.getElementById('view-config').classList.add('hidden');
-            showAlert('URL de conexión guardada con éxito.', 'success');
-        }
+async function crearCita() {
+  const select = document.getElementById('nc-medico');
+  const opcion = select.options[select.selectedIndex];
+  if (!opcion) { mostrarMensaje('msj-nueva-cita', 'No hay médicos disponibles.', 'error'); return; }
+  const datos = {
+    pacienteId: sesion.id, pacienteNombre: sesion.nombre,
+    medicoId: opcion.value, medicoNombre: opcion.dataset.nombre,
+    fecha: document.getElementById('nc-fecha').value,
+    hora: document.getElementById('nc-hora').value,
+    motivo: document.getElementById('nc-motivo').value.trim()
+  };
+  if (!datos.fecha || !datos.hora) { mostrarMensaje('msj-nueva-cita', 'Elige fecha y hora.', 'error'); return; }
+  const res = await llamarAPI('crearCita', datos);
+  mostrarMensaje('msj-nueva-cita', res.mensaje, res.exito ? 'exito' : 'error');
+  if (res.exito) { document.getElementById('nc-fecha').value = ''; document.getElementById('nc-hora').value = ''; document.getElementById('nc-motivo').value = ''; cargarMisCitas(); }
+}
 
-        async function apiCall(payload) {
-            if (!API_URL) {
-                showAlert('Configura primero la URL de Apps Script haciendo clic en el botón superior.', 'error');
-                return { status: 'ERROR' };
-            }
+async function cargarMisCitas() {
+  const res = await llamarAPI('obtenerCitasPaciente', { pacienteId: sesion.id });
+  const cuerpo = document.querySelector('#tabla-citas-paciente tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.citas.length === 0) {
+    cuerpo.innerHTML = '<tr><td colspan="6" class="vacio">Todavía no tienes citas.</td></tr>'; return;
+  }
+  res.citas.forEach(function (c) {
+    const fila = document.createElement('tr');
+    fila.innerHTML =
+      '<td>' + c.medicoNombre + '</td><td>' + c.fecha + '</td><td>' + c.hora + '</td><td>' + (c.motivo || '-') + '</td>' +
+      '<td><span class="badge ' + c.estado + '">' + c.estado + '</span></td>' +
+      '<td>' + (c.estado === 'Pendiente' ? '<button class="btn-chico peligro" onclick="cancelarCitaPaciente(\'' + c.id + '\')">Cancelar</button>' : '') + '</td>';
+    cuerpo.appendChild(fila);
+  });
+}
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload)
-                });
-                return await response.json();
-            } catch (err) {
-                showAlert('Error al conectar con Google Apps Script. Verifica la URL introducida.', 'error');
-                console.error(err);
-                return { status: 'ERROR' };
-            }
-        }
+async function cancelarCitaPaciente(id) {
+  await llamarAPI('cancelarCita', { id: id });
+  cargarMisCitas();
+}
 
-        function switchAuthTab(e, tab) {
-            document.querySelectorAll('.tabs .tab-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            if (tab === 'login') {
-                document.getElementById('form-login').classList.remove('hidden');
-                document.getElementById('form-register').classList.add('hidden');
-            } else {
-                document.getElementById('form-login').classList.add('hidden');
-                document.getElementById('form-register').classList.remove('hidden');
-            }
-        }
+/* ---------------- PORTAL ADMINISTRACIÓN ---------------- */
+async function cargarCitasAdmin() {
+  const res = await llamarAPI('obtenerTodasCitas', {});
+  const cuerpo = document.querySelector('#tabla-citas-admin tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.citas.length === 0) { cuerpo.innerHTML = '<tr><td colspan="6" class="vacio">No hay citas registradas.</td></tr>'; return; }
+  res.citas.forEach(function (c) {
+    const fila = document.createElement('tr');
+    fila.innerHTML =
+      '<td>' + c.pacienteNombre + '</td><td>' + c.medicoNombre + '</td><td>' + c.fecha + '</td><td>' + c.hora + '</td><td>' + (c.motivo || '-') + '</td>' +
+      '<td><select class="mini" onchange="cambiarEstadoCita(\'' + c.id + '\', this.value)">' +
+      ['Pendiente', 'Confirmada', 'Atendida', 'Cancelada'].map(function (e) { return '<option value="' + e + '" ' + (e === c.estado ? 'selected' : '') + '>' + e + '</option>'; }).join('') +
+      '</select></td>';
+    cuerpo.appendChild(fila);
+  });
+}
+async function cambiarEstadoCita(id, estado) {
+  await llamarAPI('actualizarEstadoCita', { id: id, estado: estado });
+}
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+async function cargarPacientesAdmin() {
+  const res = await llamarAPI('obtenerTodosPacientes', {});
+  const cuerpo = document.querySelector('#tabla-pacientes-admin tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.pacientes.length === 0) { cuerpo.innerHTML = '<tr><td colspan="3" class="vacio">Aún no hay pacientes registrados.</td></tr>'; return; }
+  res.pacientes.forEach(function (p) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = '<td>' + p.nombre + '</td><td>' + p.email + '</td><td>' + (p.telefono || '-') + '</td>';
+    cuerpo.appendChild(fila);
+  });
+}
 
-            const res = await apiCall({ action: 'login', email, password });
+async function cargarPersonalAdmin() {
+  const res = await llamarAPI('obtenerTodoPersonal', {});
+  const cuerpo = document.querySelector('#tabla-personal-admin tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.personal.length === 0) { cuerpo.innerHTML = '<tr><td colspan="3" class="vacio">No hay usuarios.</td></tr>'; return; }
+  res.personal.forEach(function (p) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = '<td>' + p.nombre + '</td><td>' + (p.rol === 'admin' ? 'Administrativo' : 'Médico') + '</td>' +
+      '<td><button class="btn-chico peligro" onclick="eliminarPersonal(\'' + p.id + '\')">Eliminar</button></td>';
+    cuerpo.appendChild(fila);
+  });
+}
 
-            if (res.status === 'OK') {
-                currentUser = res.user;
-                setupSession();
-            } else {
-                showAlert(res.message || 'Correo o contraseña incorrectos.', 'error');
-            }
-        }
+async function crearPersonal() {
+  const datos = {
+    nombre: document.getElementById('np-nombre').value.trim(),
+    email: document.getElementById('np-email').value.trim(),
+    password: document.getElementById('np-password').value,
+    rol: document.getElementById('np-rol').value,
+    especialidad: document.getElementById('np-especialidad').value.trim()
+  };
+  if (!datos.nombre || !datos.email || !datos.password) { mostrarMensaje('msj-nuevo-personal', 'Completa todos los campos obligatorios.', 'error'); return; }
+  const res = await llamarAPI('crearPersonal', datos);
+  mostrarMensaje('msj-nuevo-personal', res.mensaje, res.exito ? 'exito' : 'error');
+  if (res.exito) {
+    document.getElementById('np-nombre').value = ''; document.getElementById('np-email').value = ''; document.getElementById('np-password').value = '';
+    cargarPersonalAdmin();
+  }
+}
+async function eliminarPersonal(id) {
+  if (!confirm('¿Eliminar este usuario?')) return;
+  await llamarAPI('eliminarPersonal', { id: id });
+  cargarPersonalAdmin();
+}
 
-        async function handleRegister(e) {
-            e.preventDefault();
-            const datos = {
-                action: 'registrarPaciente',
-                nombre: document.getElementById('reg-nombre').value,
-                email: document.getElementById('reg-email').value,
-                password: document.getElementById('reg-password').value,
-                telefono: document.getElementById('reg-telefono').value,
-                dni: document.getElementById('reg-dni').value
-            };
+/* ---------------- PORTAL MÉDICO ---------------- */
+async function cargarCitasMedico() {
+  const res = await llamarAPI('obtenerCitasMedico', { medicoId: sesion.id });
+  const cuerpo = document.querySelector('#tabla-citas-medico tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.citas.length === 0) { cuerpo.innerHTML = '<tr><td colspan="5" class="vacio">No tienes citas asignadas.</td></tr>'; return; }
+  res.citas.forEach(function (c) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = '<td>' + c.pacienteNombre + '</td><td>' + c.fecha + '</td><td>' + c.hora + '</td><td>' + (c.motivo || '-') + '</td>' +
+      '<td><span class="badge ' + c.estado + '">' + c.estado + '</span></td>';
+    cuerpo.appendChild(fila);
+  });
+}
 
-            const res = await apiCall(datos);
-            if (res.status === 'OK') {
-                showAlert('Registro completado. Ya puedes iniciar sesión.', 'success');
-                document.getElementById('form-register').reset();
-                document.querySelectorAll('.tabs .tab-btn')[0].click();
-            } else {
-                showAlert(res.message || 'Error al registrar el usuario.', 'error');
-            }
-        }
+let temporizadorBusqueda = null;
+function buscarPacientes() {
+  clearTimeout(temporizadorBusqueda);
+  temporizadorBusqueda = setTimeout(async function () {
+    const termino = document.getElementById('bp-termino').value.trim();
+    const contenedor = document.getElementById('bp-resultados');
+    if (!termino) { contenedor.innerHTML = ''; return; }
+    const res = await llamarAPI('buscarPacientes', { termino: termino });
+    contenedor.innerHTML = '';
+    if (res.exito && res.pacientes.length > 0) {
+      res.pacientes.forEach(function (p) {
+        const fila = document.createElement('div');
+        fila.style.cssText = 'padding:9px 10px;border:1px solid var(--borde);border-radius:8px;margin-top:6px;cursor:pointer;font-size:13.5px;';
+        fila.innerHTML = '<strong>' + p.nombre + '</strong><br><span style="color:var(--texto-suave);font-size:12.5px;">' + p.email + '</span>';
+        fila.onclick = function () { abrirHistorial(p); };
+        contenedor.appendChild(fila);
+      });
+    } else {
+      contenedor.innerHTML = '<p style="font-size:13px;">Sin resultados.</p>';
+    }
+  }, 350);
+}
 
-        async function handleCrearCita(e) {
-            e.preventDefault();
-            const datos = {
-                action: 'crearCita',
-                idPaciente: currentUser.id,
-                idMedico: document.getElementById('cita-medico').value,
-                fecha: document.getElementById('cita-fecha').value,
-                hora: document.getElementById('cita-hora').value,
-                motivo: document.getElementById('cita-motivo').value
-            };
+async function abrirHistorial(paciente) {
+  pacienteSeleccionadoHistorial = paciente;
+  document.getElementById('panel-historial').style.display = 'block';
+  document.getElementById('historial-nombre-paciente').textContent = 'Historial de ' + paciente.nombre;
+  await cargarHistorial();
+}
 
-            const res = await apiCall(datos);
-            if (res.status === 'OK') {
-                showAlert('Cita reservada correctamente.', 'success');
-                e.target.reset();
-            } else {
-                showAlert('Error al agendar la cita.', 'error');
-            }
-        }
+async function cargarHistorial() {
+  const res = await llamarAPI('obtenerHistorial', { pacienteId: pacienteSeleccionadoHistorial.id });
+  const cuerpo = document.querySelector('#tabla-historial tbody');
+  cuerpo.innerHTML = '';
+  if (!res.exito || res.historial.length === 0) { cuerpo.innerHTML = '<tr><td colspan="5" class="vacio">Sin registros previos.</td></tr>'; return; }
+  res.historial.forEach(function (h) {
+    const fila = document.createElement('tr');
+    fila.innerHTML = '<td>' + h.fecha + '</td><td>' + h.medicoNombre + '</td><td>' + h.diagnostico + '</td><td>' + h.tratamiento + '</td><td>' + (h.notas || '-') + '</td>';
+    cuerpo.appendChild(fila);
+  });
+}
 
-        async function handleGuardarHistoria(e) {
-            e.preventDefault();
-            const datos = {
-                action: 'guardarHistoria',
-                idPaciente: document.getElementById('hist-paciente-id').value,
-                idMedico: currentUser.id,
-                diagnostico: document.getElementById('hist-diagnostico').value,
-                tratamiento: document.getElementById('hist-tratamiento').value,
-                notas: document.getElementById('hist-notas').value
-            };
+async function agregarHistorial() {
+  const datos = {
+    pacienteId: pacienteSeleccionadoHistorial.id,
+    medicoId: sesion.id, medicoNombre: sesion.nombre,
+    diagnostico: document.getElementById('hh-diagnostico').value.trim(),
+    tratamiento: document.getElementById('hh-tratamiento').value.trim(),
+    notas: document.getElementById('hh-notas').value.trim()
+  };
+  if (!datos.diagnostico) { mostrarMensaje('msj-historial', 'El diagnóstico es obligatorio.', 'error'); return; }
+  const res = await llamarAPI('agregarHistorial', datos);
+  mostrarMensaje('msj-historial', res.mensaje, res.exito ? 'exito' : 'error');
+  if (res.exito) {
+    document.getElementById('hh-diagnostico').value = ''; document.getElementById('hh-tratamiento').value = ''; document.getElementById('hh-notas').value = '';
+    cargarHistorial();
+  }
+}
 
-            const res = await apiCall(datos);
-            if (res.status === 'OK') {
-                showAlert('Historia clínica registrada correctamente.', 'success');
-                e.target.reset();
-            } else {
-                showAlert('Error al registrar la historia médica.', 'error');
-            }
-        }
-
-        function setupSession() {
-            document.getElementById('view-auth').classList.add('hidden');
-            document.getElementById('header-user').classList.remove('hidden');
-            document.getElementById('user-display-name').textContent = currentUser.nombre;
-            document.getElementById('user-role-badge').textContent = currentUser.rol;
-
-            if (currentUser.rol === 'PACIENTE') {
-                document.getElementById('view-paciente').classList.remove('hidden');
-            } else if (currentUser.rol === 'ADMIN') {
-                document.getElementById('view-admin').classList.remove('hidden');
-            } else if (currentUser.rol === 'MEDICO') {
-                document.getElementById('view-medico').classList.remove('hidden');
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            document.getElementById('header-user').classList.add('hidden');
-            document.getElementById('view-paciente').classList.add('hidden');
-            document.getElementById('view-admin').classList.add('hidden');
-            document.getElementById('view-medico').classList.add('hidden');
-            document.getElementById('view-auth').classList.remove('hidden');
-        }
-
-        function showAlert(msg, type) {
-            const box = document.getElementById('alert-box');
-            box.textContent = msg;
-            box.className = `alert alert-${type === 'error' ? 'error' : 'success'}`;
-            box.classList.remove('hidden');
-            setTimeout(() => box.classList.add('hidden'), 5000);
-        }
-    </script>
+/* ---------------- INICIO ---------------- */
+if (sesion) aplicarSesion();
+</script>
 </body>
 </html>
